@@ -1,4 +1,4 @@
-import { useState } from 'react'
+// Removed unused import
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { CVTemplate, CV_TEMPLATES } from '@/types/templates'

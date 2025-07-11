@@ -47,7 +47,7 @@ export default function Home() {
       if (result.success && result.data) {
         setProcessingStage('complete')
         setTimeout(() => {
-          setCvData(result.data)
+          setCvData(result.data!)
           setShowTemplateSelector(true)
         }, 500)
       } else {

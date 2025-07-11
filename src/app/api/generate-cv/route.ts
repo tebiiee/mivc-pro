@@ -138,7 +138,7 @@ export async function POST(request: NextRequest) {
     let cvData: CVData
     try {
       cvData = JSON.parse(aiResponse)
-    } catch (parseError) {
+    } catch {
       // Si falla el parsing, intentar extraer JSON del texto
       const jsonMatch = aiResponse.match(/\{[\s\S]*\}/)
       if (jsonMatch) {

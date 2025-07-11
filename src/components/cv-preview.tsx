@@ -1,6 +1,6 @@
 import { CVData } from '@/types/cv'
 import { CVTemplate } from '@/types/templates'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+// Removed unused imports
 import { Button } from '@/components/ui/button'
 import { Download, Mail, Phone, MapPin, Globe, Linkedin, Palette } from 'lucide-react'
 
