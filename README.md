@@ -15,7 +15,7 @@ Una aplicación web en español que utiliza inteligencia artificial para ayudar 
 
 - **Frontend**: Next.js 15, React 19, TypeScript
 - **Estilos**: Tailwind CSS
-- **IA**: OpenRouter API (Gemini 2.0 Flash Experimental)
+- **IA**: OpenRouter API (Gemini 2.0 Flash Experimental) con prompt de élite optimizado para ATS
 - **PDF**: @react-pdf/renderer
 - **Iconos**: Lucide React
 
