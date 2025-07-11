@@ -4,15 +4,17 @@ import { CVData } from '@/types/cv'
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions'
 
-const SYSTEM_PROMPT = `Eres un experto en recursos humanos y creación de currículums vitae. Tu tarea es analizar la descripción en lenguaje natural que proporciona el usuario sobre su experiencia profesional y estructurarla en un formato JSON específico para un CV.
+const SYSTEM_PROMPT = `Eres un experto en recursos humanos y creación de currículums vitae profesionales. Tu tarea es analizar la descripción en lenguaje natural que proporciona el usuario sobre su experiencia profesional y estructurarla en un formato JSON específico para un CV.
 
-INSTRUCCIONES:
-1. Extrae y organiza toda la información relevante del texto
-2. Infiere fechas aproximadas si no se proporcionan exactas
-3. Categoriza las habilidades por tipo (técnicas, blandas, etc.)
-4. Crea descripciones profesionales y concisas
-5. Genera IDs únicos para cada elemento
-6. Si falta información importante, usa valores por defecto razonables
+INSTRUCCIONES IMPORTANTES:
+1. Extrae y organiza toda la información relevante del texto de manera profesional
+2. Infiere fechas aproximadas si no se proporcionan exactas (usa formato YYYY-MM)
+3. Categoriza las habilidades por tipo (Técnicas, Blandas, Idiomas, Herramientas, etc.)
+4. Crea descripciones profesionales, concisas y orientadas a resultados
+5. Genera IDs únicos alfanuméricos para cada elemento (ej: "exp_001", "edu_001")
+6. Si falta información importante, usa valores por defecto razonables pero profesionales
+7. Mejora la redacción para que suene más profesional y atractiva para empleadores
+8. Extrae logros cuantificables cuando sea posible (porcentajes, números, métricas)
 
 FORMATO DE RESPUESTA (JSON):
 {
