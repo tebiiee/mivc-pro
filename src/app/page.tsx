@@ -89,6 +89,13 @@ export default function Home() {
     setShowTemplateSelector(true)
   }
 
+  const handleHome = () => {
+    setCvData(null)
+    setError(null)
+    setShowTemplateSelector(false)
+    setDescription('')
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       {/* Header */}
@@ -126,6 +133,7 @@ export default function Home() {
             onDownload={handleDownloadPDF}
             onEdit={handleEditCV}
             onChangeTemplate={handleChangeTemplate}
+            onHome={handleHome}
           />
         ) : (
           <div className="max-w-4xl mx-auto">

@@ -1,7 +1,7 @@
 import { CVData } from '@/types/cv'
 import { CVTemplate } from '@/types/templates'
 import { Button } from '@/components/ui/button'
-import { Download, Mail, Phone, MapPin, Globe, Linkedin, Palette } from 'lucide-react'
+import { Download, Mail, Phone, MapPin, Globe, Linkedin, Palette, Home } from 'lucide-react'
 import { HarvardTemplate } from '@/components/templates/HarvardTemplate'
 
 interface CVPreviewProps {
@@ -10,9 +10,10 @@ interface CVPreviewProps {
   onDownload: () => void
   onEdit: () => void
   onChangeTemplate: () => void
+  onHome: () => void
 }
 
-export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate }: CVPreviewProps) {
+export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate, onHome }: CVPreviewProps) {
   const { personalInfo, experience, education, skills, languages, projects } = data
 
   // Ordenar experiencia y educación por fecha (más reciente primero)
@@ -34,6 +35,10 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Vista previa de tu CV</h2>
         <div className="flex gap-3">
+          <Button variant="outline" onClick={onHome} className="gap-2">
+            <Home className="h-4 w-4" />
+            Volver al inicio
+          </Button>
           <Button variant="outline" onClick={onChangeTemplate} className="gap-2">
             <Palette className="h-4 w-4" />
             Cambiar plantilla

@@ -257,7 +257,7 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
           <View style={styles.skillsSection}>
             <Text style={styles.sectionTitle}>SKILLS ADICIONALES</Text>
             <View style={styles.sectionSeparator} />
-            
+
             <View style={styles.skillsList}>
               {data.skills.map((skill, index) => (
                 <Text key={index} style={styles.skill}>
@@ -265,6 +265,54 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
                 </Text>
               ))}
             </View>
+          </View>
+        )}
+
+        {/* Idiomas */}
+        {data.languages && data.languages.length > 0 && (
+          <View style={styles.skillsSection}>
+            <Text style={styles.sectionTitle}>IDIOMAS</Text>
+            <View style={styles.sectionSeparator} />
+
+            <View style={styles.skillsList}>
+              {data.languages.map((language, index) => (
+                <Text key={index} style={styles.skill}>
+                  • {language.name} - {language.level}
+                </Text>
+              ))}
+            </View>
+          </View>
+        )}
+
+        {/* Proyectos */}
+        {data.projects && data.projects.length > 0 && (
+          <View style={styles.skillsSection}>
+            <Text style={styles.sectionTitle}>PROYECTOS</Text>
+            <View style={styles.sectionSeparator} />
+
+            {data.projects.map((project, index) => (
+              <View key={index} style={styles.experienceItem}>
+                <View style={styles.experienceHeader}>
+                  <View style={styles.experienceLeft}>
+                    <Text style={styles.companyName}>{project.name}</Text>
+                    {project.url && (
+                      <Text style={styles.details}>{project.url}</Text>
+                    )}
+                  </View>
+                  <View style={styles.experienceRight}>
+                    <Text style={styles.dateRange}>
+                      {formatDateRange(project.startDate, project.endDate || '')}
+                    </Text>
+                  </View>
+                </View>
+                <Text style={styles.responsibility}>{project.description}</Text>
+                {project.technologies && project.technologies.length > 0 && (
+                  <Text style={styles.details}>
+                    Tecnologías: {project.technologies.join(', ')}
+                  </Text>
+                )}
+              </View>
+            ))}
           </View>
         )}
       </Page>

@@ -9,7 +9,7 @@ interface HarvardTemplateProps {
 
 export const HarvardTemplate: React.FC<HarvardTemplateProps> = ({ data }) => {
   // Ordenar experiencia laboral por fecha (más reciente primero)
-  const sortedWorkExperience = [...(data.workExperience || [])].sort((a, b) => {
+  const sortedWorkExperience = [...(data.experience || [])].sort((a, b) => {
     const dateA = new Date(a.endDate || '9999-12-31')
     const dateB = new Date(b.endDate || '9999-12-31')
     return dateB.getTime() - dateA.getTime()
@@ -160,7 +160,7 @@ export const HarvardTemplate: React.FC<HarvardTemplateProps> = ({ data }) => {
             SKILLS ADICIONALES
           </h2>
           <hr className="border-black mb-3" />
-          
+
           <ul className="list-disc ml-6 space-y-1" style={{ fontSize: '10pt' }}>
             {data.skills.map((skill, index) => (
               <li key={index} className="text-justify">
@@ -168,6 +168,64 @@ export const HarvardTemplate: React.FC<HarvardTemplateProps> = ({ data }) => {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {/* Idiomas */}
+      {data.languages && data.languages.length > 0 && (
+        <div className="mb-4">
+          <h2 className="text-lg font-bold mb-3 uppercase tracking-wide" style={{ fontSize: '12pt' }}>
+            IDIOMAS
+          </h2>
+          <hr className="border-black mb-3" />
+
+          <ul className="list-disc ml-6 space-y-1" style={{ fontSize: '10pt' }}>
+            {data.languages.map((language, index) => (
+              <li key={index} className="text-justify">
+                {language.name} - {language.level}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Proyectos */}
+      {data.projects && data.projects.length > 0 && (
+        <div className="mb-4">
+          <h2 className="text-lg font-bold mb-3 uppercase tracking-wide" style={{ fontSize: '12pt' }}>
+            PROYECTOS
+          </h2>
+          <hr className="border-black mb-3" />
+
+          {data.projects.map((project, index) => (
+            <div key={index} className="mb-3">
+              <div className="flex justify-between items-start mb-1">
+                <div>
+                  <h3 className="font-bold" style={{ fontSize: '11pt' }}>
+                    {project.name}
+                  </h3>
+                  {project.url && (
+                    <p className="text-sm" style={{ fontSize: '10pt' }}>
+                      {project.url}
+                    </p>
+                  )}
+                </div>
+                <div className="text-right text-sm" style={{ fontSize: '10pt' }}>
+                  <p className="italic">
+                    {formatDateRange(project.startDate, project.endDate || '')}
+                  </p>
+                </div>
+              </div>
+              <p className="text-justify mb-2" style={{ fontSize: '10pt' }}>
+                {project.description}
+              </p>
+              {project.technologies && project.technologies.length > 0 && (
+                <p className="text-sm" style={{ fontSize: '9pt' }}>
+                  <strong>Tecnologías:</strong> {project.technologies.join(', ')}
+                </p>
+              )}
+            </div>
+          ))}
         </div>
       )}
     </div>
