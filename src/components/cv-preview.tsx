@@ -30,11 +30,11 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
   })
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-6">
       {/* Header con botones de acción */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
         <h2 className="text-2xl font-bold">Vista previa de tu CV</h2>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <Button variant="outline" onClick={onHome} className="gap-2">
             <Home className="h-4 w-4" />
             Volver al inicio
@@ -53,11 +53,14 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
         </div>
       </div>
 
-      {/* CV Preview */}
-      {template.layout === 'harvard' ? (
-        <HarvardTemplate data={data} template={template} />
-      ) : (
-        <div className="bg-white shadow-lg rounded-lg overflow-hidden" id="cv-content">
+      {/* CV Preview - Centrado y con mejor layout */}
+      <div className="flex justify-center">
+        {template.layout === 'harvard' ? (
+          <div className="w-full max-w-[210mm]">
+            <HarvardTemplate data={data} template={template} />
+          </div>
+        ) : (
+          <div className="w-full max-w-[210mm] bg-white shadow-lg rounded-lg overflow-hidden" id="cv-content">
           {/* Header del CV */}
           <div
             className="text-white p-8"
@@ -65,10 +68,10 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
               background: `linear-gradient(135deg, ${template.colors.primary} 0%, ${template.colors.secondary} 100%)`
             }}
           >
-            <h1 className="text-3xl font-bold mb-2">{personalInfo.fullName}</h1>
-            <p className="text-white/90 text-lg mb-4">{personalInfo.summary}</p>
+            <h1 className="text-3xl font-bold mb-2 text-white">{personalInfo.fullName}</h1>
+            <p className="text-white/95 text-lg mb-4">{personalInfo.summary}</p>
           
-          <div className="flex flex-wrap gap-4 text-sm">
+          <div className="flex flex-wrap gap-4 text-sm text-white/95">
             {personalInfo.email && (
               <div className="flex items-center gap-1">
                 <Mail className="h-4 w-4" />
@@ -107,9 +110,8 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
             {sortedExperience.length > 0 && (
               <section>
                 <h2
-                  className="text-xl font-bold mb-4 pb-2"
+                  className="text-xl font-bold mb-4 pb-2 text-gray-900"
                   style={{
-                    color: template.colors.text,
                     borderBottom: `2px solid ${template.colors.primary}`
                   }}
                 >
@@ -120,7 +122,7 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
                     <div key={exp.id} className="border-l-2 border-gray-200 pl-4">
                       <div className="flex justify-between items-start mb-2">
                         <div>
-                          <h3 className="font-semibold text-lg">{exp.position}</h3>
+                          <h3 className="font-semibold text-lg text-gray-900">{exp.position}</h3>
                           <p
                             className="font-medium"
                             style={{ color: template.colors.primary }}
@@ -150,9 +152,8 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
             {sortedEducation.length > 0 && (
               <section>
                 <h2
-                  className="text-xl font-bold mb-4 pb-2"
+                  className="text-xl font-bold mb-4 pb-2 text-gray-900"
                   style={{
-                    color: template.colors.text,
                     borderBottom: `2px solid ${template.colors.primary}`
                   }}
                 >
@@ -163,7 +164,7 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
                     <div key={edu.id} className="border-l-2 border-gray-200 pl-4">
                       <div className="flex justify-between items-start mb-2">
                         <div>
-                          <h3 className="font-semibold text-lg">{edu.degree}</h3>
+                          <h3 className="font-semibold text-lg text-gray-900">{edu.degree}</h3>
                           <p
                             className="font-medium"
                             style={{ color: template.colors.primary }}
@@ -193,9 +194,8 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
             {skills.length > 0 && (
               <section>
                 <h2
-                  className="text-xl font-bold mb-4 pb-2"
+                  className="text-xl font-bold mb-4 pb-2 text-gray-900"
                   style={{
-                    color: template.colors.text,
                     borderBottom: `2px solid ${template.colors.primary}`
                   }}
                 >
@@ -210,7 +210,7 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
                     }, {} as Record<string, typeof skills>)
                   ).map(([category, categorySkills]) => (
                     <div key={category}>
-                      <h3 className="font-medium text-gray-700 mb-2">{category}</h3>
+                      <h3 className="font-medium text-gray-900 mb-2">{category}</h3>
                       <div className="flex flex-wrap gap-2">
                         {categorySkills.map((skill) => (
                           <span
@@ -235,9 +235,8 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
             {languages.length > 0 && (
               <section>
                 <h2
-                  className="text-xl font-bold mb-4 pb-2"
+                  className="text-xl font-bold mb-4 pb-2 text-gray-900"
                   style={{
-                    color: template.colors.text,
                     borderBottom: `2px solid ${template.colors.primary}`
                   }}
                 >
@@ -246,7 +245,7 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
                 <div className="space-y-2">
                   {languages.map((lang) => (
                     <div key={lang.id} className="flex justify-between">
-                      <span className="font-medium">{lang.name}</span>
+                      <span className="font-medium text-gray-900">{lang.name}</span>
                       <span className="text-gray-600">{lang.level}</span>
                     </div>
                   ))}
@@ -259,9 +258,8 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
           {projects.length > 0 && (
             <section>
               <h2
-                className="text-xl font-bold mb-4 pb-2"
+                className="text-xl font-bold mb-4 pb-2 text-gray-900"
                 style={{
-                  color: template.colors.text,
                   borderBottom: `2px solid ${template.colors.primary}`
                 }}
               >
@@ -272,7 +270,7 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
                   <div key={project.id} className="border-l-2 border-gray-200 pl-4">
                     <div className="flex justify-between items-start mb-2">
                       <div>
-                        <h3 className="font-semibold text-lg">{project.name}</h3>
+                        <h3 className="font-semibold text-lg text-gray-900">{project.name}</h3>
                         {project.url && (
                           <a
                             href={project.url}
@@ -307,7 +305,8 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
             )}
           </div>
         </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }

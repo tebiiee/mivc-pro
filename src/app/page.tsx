@@ -10,6 +10,7 @@ import { CVTemplate, CV_TEMPLATES } from '@/types/templates'
 import { CVPreview } from '@/components/cv-preview'
 import { TemplateSelector } from '@/components/template-selector'
 import { ProcessingStatus } from '@/components/processing-status'
+import { DecorativeFlowers } from '@/components/ui/decorative-flowers'
 import { generateAndDownloadPDF } from '@/lib/pdf-utils'
 
 export default function Home() {
@@ -97,27 +98,43 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-white relative">
+      {/* Decorative Flowers */}
+      <DecorativeFlowers />
+
       {/* Header */}
-      <header className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <FileText className="h-8 w-8 text-primary" />
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+      <header className="container mx-auto px-4 py-12 relative z-10">
+        <div className="text-center max-w-4xl mx-auto">
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <FileText className="h-10 w-10 text-black" />
+            <h1 className="headline text-black">
               micv.pro
             </h1>
           </div>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <h2 className="headline text-black mb-6 max-w-3xl mx-auto leading-tight">
             Crea tu currículum profesional con inteligencia artificial
+          </h2>
+          <p className="subheadline text-gray-600 max-w-2xl mx-auto mb-8">
+            Describe tu experiencia en lenguaje natural y obtén un CV listo para descargar en segundos
           </p>
-          <p className="text-gray-500 dark:text-gray-400 mt-2">
-            Describe tu experiencia en lenguaje natural y obtén un CV listo para descargar
-          </p>
+          <div className="flex justify-center">
+            <Button
+              size="lg"
+              className="px-8 py-4 text-lg font-semibold rounded-lg"
+              onClick={() => {
+                const formElement = document.querySelector('#main-form');
+                formElement?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              <Sparkles className="mr-2 h-5 w-5" />
+              Comenzar gratis
+            </Button>
+          </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 pb-16">
+      <main className="container mx-auto px-4 pb-16 relative z-10">
         {isProcessing ? (
           <ProcessingStatus stage={processingStage} />
         ) : cvData && showTemplateSelector ? (
@@ -136,13 +153,13 @@ export default function Home() {
             onHome={handleHome}
           />
         ) : (
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-5xl mx-auto">
           {/* Features */}
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <Card>
-              <CardHeader className="text-center">
-                <Sparkles className="h-8 w-8 text-primary mx-auto mb-2" />
-                <CardTitle className="text-lg">IA Avanzada</CardTitle>
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
+            <Card className="text-center">
+              <CardHeader>
+                <Sparkles className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
+                <CardTitle className="text-xl font-semibold">IA Avanzada</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-center">
@@ -151,10 +168,10 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="text-center">
-                <Shield className="h-8 w-8 text-primary mx-auto mb-2" />
-                <CardTitle className="text-lg">100% Privado</CardTitle>
+            <Card className="text-center">
+              <CardHeader>
+                <Shield className="h-12 w-12 text-green-500 mx-auto mb-4" />
+                <CardTitle className="text-xl font-semibold">100% Privado</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-center">
@@ -163,10 +180,10 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="text-center">
-                <Download className="h-8 w-8 text-primary mx-auto mb-2" />
-                <CardTitle className="text-lg">Descarga Inmediata</CardTitle>
+            <Card className="text-center">
+              <CardHeader>
+                <Download className="h-12 w-12 text-blue-500 mx-auto mb-4" />
+                <CardTitle className="text-xl font-semibold">Descarga Inmediata</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-center">
@@ -177,12 +194,12 @@ export default function Home() {
           </div>
 
           {/* Main Form */}
-          <Card className="w-full">
-            <CardHeader>
-              <CardTitle className="text-2xl text-center">
+          <Card className="w-full max-w-4xl mx-auto" id="main-form">
+            <CardHeader className="text-center">
+              <CardTitle className="text-3xl font-bold mb-4">
                 Cuéntanos sobre tu experiencia profesional
               </CardTitle>
-              <CardDescription className="text-center">
+              <CardDescription className="text-lg">
                 Escribe en lenguaje natural sobre tu trabajo, educación, habilidades y logros.
                 Nuestra IA se encargará de estructurar toda la información.
               </CardDescription>
@@ -214,16 +231,16 @@ export default function Home() {
                     type="submit"
                     size="lg"
                     disabled={description.trim().length < 50 || isProcessing}
-                    className="px-8"
+                    className="px-12 py-4 text-lg font-semibold rounded-lg"
                   >
                     {isProcessing ? (
                       <>
-                        <Sparkles className="mr-2 h-4 w-4 animate-spin" />
+                        <Sparkles className="mr-2 h-5 w-5 animate-spin" />
                         Procesando con IA...
                       </>
                     ) : (
                       <>
-                        <Sparkles className="mr-2 h-4 w-4" />
+                        <Sparkles className="mr-2 h-5 w-5" />
                         Generar CV con IA
                       </>
                     )}
@@ -232,18 +249,35 @@ export default function Home() {
               </form>
             </CardContent>
           </Card>
+
+          {/* Trust Section */}
+          <div className="mt-20 text-center">
+            <p className="caption text-gray-500 mb-8 uppercase tracking-wider font-medium">
+              Confiado por más de 10,000 profesionales de empresas líderes
+            </p>
+            <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8 opacity-60">
+              <div className="text-gray-400 font-semibold text-base md:text-lg">Google</div>
+              <div className="text-gray-400 font-semibold text-base md:text-lg">Microsoft</div>
+              <div className="text-gray-400 font-semibold text-base md:text-lg">Amazon</div>
+              <div className="text-gray-400 font-semibold text-base md:text-lg">Meta</div>
+              <div className="text-gray-400 font-semibold text-base md:text-lg hidden sm:block">Apple</div>
+              <div className="text-gray-400 font-semibold text-base md:text-lg hidden sm:block">Netflix</div>
+              <div className="text-gray-400 font-semibold text-base md:text-lg hidden md:block">Spotify</div>
+              <div className="text-gray-400 font-semibold text-base md:text-lg hidden md:block">Uber</div>
+            </div>
+          </div>
           </div>
         )}
       </main>
 
       {/* Footer */}
-      <footer className="bg-white dark:bg-gray-800 border-t">
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center text-gray-600 dark:text-gray-400">
-            <p className="mb-2">
-              <strong>micv.pro</strong> - Generador de CV con Inteligencia Artificial
+      <footer className="bg-gray-50 border-t border-gray-200 relative z-10">
+        <div className="container mx-auto px-4 py-12">
+          <div className="text-center text-gray-600">
+            <p className="mb-3 text-lg font-semibold">
+              <strong className="text-black">micv.pro</strong> - Generador de CV con Inteligencia Artificial
             </p>
-            <p className="text-sm">
+            <p className="body-text">
               Gratuito • Sin registro • Privado • Descarga inmediata
             </p>
           </div>

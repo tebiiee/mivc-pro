@@ -1,17 +1,98 @@
 @import "tailwindcss";
 
+/* Clay Design System Colors */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --primary: #2563eb;
-  --primary-foreground: #ffffff;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
-  --muted: #f8fafc;
-  --muted-foreground: #64748b;
-  --border: #e2e8f0;
-  --input: #ffffff;
-  --ring: #2563eb;
+  /* Primary Colors */
+  --background: #FFFFFF;
+  --foreground: #000000;
+  --primary: #000000;
+  --primary-foreground: #FFFFFF;
+
+  /* Secondary Colors */
+  --secondary: #FAF9F7;
+  --secondary-foreground: #000000;
+  --muted: #F6F5F4;
+  --muted-foreground: #595959;
+
+  /* UI Elements */
+  --card-background: #FAF9F7;
+  --border: #E7E4DF;
+  --input: #FFFFFF;
+  --ring: #000000;
+  --highlight: #F6F5F4;
+
+  /* Flower Colors for decorative elements */
+  --flower-yellow: #F6C34A;
+  --flower-pink: #E96C7C;
+  --flower-blue: #7EC6E6;
+  --flower-green: #A9E65B;
+  --flower-purple: #F9B4E1;
+
+  /* Button Colors */
+  --button-background: #000000;
+  --button-text: #FFFFFF;
+  --button-hover: #222222;
+
+  /* Text Colors */
+  --text-primary: #000000;
+  --text-secondary: #595959;
+}
+
+/* Typography Classes based on Clay Design System */
+.headline {
+  font-family: var(--font-inter), 'Inter', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 56px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.subheadline {
+  font-family: var(--font-inter), 'Inter', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.body-text {
+  font-family: var(--font-inter), 'Inter', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.caption {
+  font-family: var(--font-inter), 'Inter', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  .headline {
+    font-size: 36px;
+  }
+
+  .subheadline {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .headline {
+    font-size: 28px;
+  }
+
+  .subheadline {
+    font-size: 16px;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
 }
 
 @theme inline {

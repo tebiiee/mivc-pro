@@ -72,7 +72,7 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
       fontStyle: 'italic',
       textAlign: 'justify',
       marginBottom: 24,
-      fontFamily: 'Helvetica-Oblique',
+      fontFamily: 'Helvetica',
     },
     sectionTitle: {
       fontSize: 12,
@@ -120,7 +120,7 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
     dateRange: {
       fontSize: 10,
       fontStyle: 'italic',
-      fontFamily: 'Helvetica-Oblique',
+      fontFamily: 'Helvetica',
     },
     responsibilities: {
       marginTop: 8,
@@ -152,7 +152,7 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
     details: {
       fontSize: 10,
       fontStyle: 'italic',
-      fontFamily: 'Helvetica-Oblique',
+      fontFamily: 'Helvetica',
     },
     skillsSection: {
       marginBottom: 16,

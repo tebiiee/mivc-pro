@@ -1,0 +1,111 @@
+{
+  "brand": {
+    "name": "Clay",
+    "logo": "clay_logo.png"
+  },
+  "colors": {
+    "primary": "#000000",
+    "background": "#FFFFFF",
+    "cardBackground": "#FAF9F7",
+    "buttonBackground": "#000000",
+    "buttonText": "#FFFFFF",
+    "textPrimary": "#000000",
+    "textSecondary": "#595959",
+    "border": "#E7E4DF",
+    "highlight": "#F6F5F4",
+    "flowerColors": [
+      "#F6C34A",
+      "#E96C7C",
+      "#7EC6E6",
+      "#A9E65B",
+      "#F9B4E1"
+    ]
+  },
+  "typography": {
+    "fontFamily": "'Inter', Arial, sans-serif",
+    "headline": {
+      "fontWeight": 700,
+      "fontSize": "56px",
+      "lineHeight": "1.1",
+      "letterSpacing": "-0.02em"
+    },
+    "subheadline": {
+      "fontWeight": 400,
+      "fontSize": "20px",
+      "lineHeight": "1.5",
+      "letterSpacing": "0"
+    },
+    "body": {
+      "fontWeight": 400,
+      "fontSize": "16px",
+      "lineHeight": "1.5"
+    },
+    "caption": {
+      "fontWeight": 400,
+      "fontSize": "14px",
+      "lineHeight": "1.4"
+    }
+  },
+  "button": {
+    "primary": {
+      "background": "#000000",
+      "color": "#FFFFFF",
+      "fontWeight": 600,
+      "borderRadius": "8px",
+      "padding": "16px 32px",
+      "hoverBackground": "#222222",
+      "boxShadow": "none"
+    }
+  },
+  "card": {
+    "background": "#FAF9F7",
+    "borderRadius": "24px",
+    "boxShadow": "0 1px 8px rgba(0,0,0,0.04)"
+  },
+  "navbar": {
+    "background": "#FFFFFF",
+    "height": "80px",
+    "logoHeight": "32px",
+    "fontWeight": 500,
+    "fontSize": "16px",
+    "itemSpacing": "32px"
+  },
+  "spacing": {
+    "sectionPadding": "64px",
+    "elementMargin": "24px",
+    "cardPadding": "40px"
+  },
+  "icons": {
+    "star": "star_icon.svg",
+    "arrowRight": "arrow_right.svg"
+  },
+  "illustrations": {
+    "flowers": "flowers_3d.png"
+  },
+  "components": {
+    "logoCloud": {
+      "logos": [
+        "canva.png",
+        "hubspot.png",
+        "vanta.png",
+        "intercom.png",
+        "openai.png",
+        "square.png",
+        "airbnb.png",
+        "anthropic.png",
+        "retool.png",
+        "ramp.png",
+        "notion.png",
+        "webflow.png",
+        "grafana.png",
+        "okta.png",
+        "verkada.png",
+        "strava.png",
+        "faire.png",
+        "cursor.png"
+      ],
+      "logoHeight": "32px",
+      "spacing": "32px"
+    }
+  }
+}
