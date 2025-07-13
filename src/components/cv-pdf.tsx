@@ -3,6 +3,7 @@
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import { CVData } from '@/types/cv'
 import { CVTemplate } from '@/types/templates'
+import { HarvardPDF } from '@/components/templates/HarvardPDF'
 
 interface CVPDFProps {
   data: CVData
@@ -16,7 +17,25 @@ interface CVPDFProps {
 // })
 
 export function CVPDF({ data, template }: CVPDFProps) {
+  // Si es plantilla Harvard, usar el componente específico
+  if (template.layout === 'harvard') {
+    return <HarvardPDF data={data} template={template} />
+  }
+
   const { personalInfo, experience, education, skills, languages, projects } = data
+
+  // Ordenar experiencia y educación por fecha (más reciente primero)
+  const sortedExperience = [...experience].sort((a, b) => {
+    const dateA = new Date(a.endDate || '9999-12-31')
+    const dateB = new Date(b.endDate || '9999-12-31')
+    return dateB.getTime() - dateA.getTime()
+  })
+
+  const sortedEducation = [...education].sort((a, b) => {
+    const dateA = new Date(a.endDate || '9999-12-31')
+    const dateB = new Date(b.endDate || '9999-12-31')
+    return dateB.getTime() - dateA.getTime()
+  })
 
   const styles = StyleSheet.create({
     page: {
@@ -205,7 +224,7 @@ export function CVPDF({ data, template }: CVPDFProps) {
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerName}>{personalInfo.name}</Text>
+          <Text style={styles.headerName}>{personalInfo.fullName}</Text>
           <Text style={styles.headerSummary}>{personalInfo.summary}</Text>
           <View style={styles.headerContact}>
             {personalInfo.email && (
@@ -239,10 +258,10 @@ export function CVPDF({ data, template }: CVPDFProps) {
         {/* Content */}
         <View style={styles.content}>
           {/* Experience */}
-          {experience.length > 0 && (
+          {sortedExperience.length > 0 && (
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Experiencia Profesional</Text>
-              {experience.map((exp) => (
+              {sortedExperience.map((exp) => (
                 <View key={exp.id} style={styles.experienceItem}>
                   <View style={styles.experienceHeader}>
                     <View>
@@ -269,10 +288,10 @@ export function CVPDF({ data, template }: CVPDFProps) {
           )}
 
           {/* Education */}
-          {education.length > 0 && (
+          {sortedEducation.length > 0 && (
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Educación</Text>
-              {education.map((edu) => (
+              {sortedEducation.map((edu) => (
                 <View key={edu.id} style={styles.experienceItem}>
                   <View style={styles.experienceHeader}>
                     <View>

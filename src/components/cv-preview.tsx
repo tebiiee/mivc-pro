@@ -1,8 +1,8 @@
 import { CVData } from '@/types/cv'
 import { CVTemplate } from '@/types/templates'
-// Removed unused imports
 import { Button } from '@/components/ui/button'
 import { Download, Mail, Phone, MapPin, Globe, Linkedin, Palette } from 'lucide-react'
+import { HarvardTemplate } from '@/components/templates/HarvardTemplate'
 
 interface CVPreviewProps {
   data: CVData
@@ -14,6 +14,19 @@ interface CVPreviewProps {
 
 export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate }: CVPreviewProps) {
   const { personalInfo, experience, education, skills, languages, projects } = data
+
+  // Ordenar experiencia y educación por fecha (más reciente primero)
+  const sortedExperience = [...experience].sort((a, b) => {
+    const dateA = new Date(a.endDate || '9999-12-31')
+    const dateB = new Date(b.endDate || '9999-12-31')
+    return dateB.getTime() - dateA.getTime()
+  })
+
+  const sortedEducation = [...education].sort((a, b) => {
+    const dateA = new Date(a.endDate || '9999-12-31')
+    const dateB = new Date(b.endDate || '9999-12-31')
+    return dateB.getTime() - dateA.getTime()
+  })
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -36,16 +49,19 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
       </div>
 
       {/* CV Preview */}
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden" id="cv-content">
-        {/* Header del CV */}
-        <div
-          className="text-white p-8"
-          style={{
-            background: `linear-gradient(135deg, ${template.colors.primary} 0%, ${template.colors.secondary} 100%)`
-          }}
-        >
-          <h1 className="text-3xl font-bold mb-2">{personalInfo.name}</h1>
-          <p className="text-white/90 text-lg mb-4">{personalInfo.summary}</p>
+      {template.layout === 'harvard' ? (
+        <HarvardTemplate data={data} template={template} />
+      ) : (
+        <div className="bg-white shadow-lg rounded-lg overflow-hidden" id="cv-content">
+          {/* Header del CV */}
+          <div
+            className="text-white p-8"
+            style={{
+              background: `linear-gradient(135deg, ${template.colors.primary} 0%, ${template.colors.secondary} 100%)`
+            }}
+          >
+            <h1 className="text-3xl font-bold mb-2">{personalInfo.fullName}</h1>
+            <p className="text-white/90 text-lg mb-4">{personalInfo.summary}</p>
           
           <div className="flex flex-wrap gap-4 text-sm">
             {personalInfo.email && (
@@ -81,91 +97,91 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
           </div>
         </div>
 
-        <div className="p-8 space-y-8">
-          {/* Experiencia */}
-          {experience.length > 0 && (
-            <section>
-              <h2
-                className="text-xl font-bold mb-4 pb-2"
-                style={{
-                  color: template.colors.text,
-                  borderBottom: `2px solid ${template.colors.primary}`
-                }}
-              >
-                Experiencia Profesional
-              </h2>
-              <div className="space-y-4">
-                {experience.map((exp) => (
-                  <div key={exp.id} className="border-l-2 border-gray-200 pl-4">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h3 className="font-semibold text-lg">{exp.position}</h3>
-                        <p
-                          className="font-medium"
-                          style={{ color: template.colors.primary }}
-                        >
-                          {exp.company}
-                        </p>
+          <div className="p-8 space-y-8">
+            {/* Experiencia */}
+            {sortedExperience.length > 0 && (
+              <section>
+                <h2
+                  className="text-xl font-bold mb-4 pb-2"
+                  style={{
+                    color: template.colors.text,
+                    borderBottom: `2px solid ${template.colors.primary}`
+                  }}
+                >
+                  Experiencia Profesional
+                </h2>
+                <div className="space-y-4">
+                  {sortedExperience.map((exp) => (
+                    <div key={exp.id} className="border-l-2 border-gray-200 pl-4">
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <h3 className="font-semibold text-lg">{exp.position}</h3>
+                          <p
+                            className="font-medium"
+                            style={{ color: template.colors.primary }}
+                          >
+                            {exp.company}
+                          </p>
+                        </div>
+                        <span className="text-sm text-gray-500">
+                          {exp.startDate} - {exp.current ? 'Presente' : exp.endDate}
+                        </span>
                       </div>
-                      <span className="text-sm text-gray-500">
-                        {exp.startDate} - {exp.current ? 'Presente' : exp.endDate}
-                      </span>
+                      <p className="text-gray-700 mb-2">{exp.description}</p>
+                      {exp.achievements.length > 0 && (
+                        <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                          {exp.achievements.map((achievement, index) => (
+                            <li key={index}>{achievement}</li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
-                    <p className="text-gray-700 mb-2">{exp.description}</p>
-                    {exp.achievements.length > 0 && (
-                      <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-                        {exp.achievements.map((achievement, index) => (
-                          <li key={index}>{achievement}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
+                  ))}
+                </div>
+              </section>
+            )}
 
-          {/* Educación */}
-          {education.length > 0 && (
-            <section>
-              <h2
-                className="text-xl font-bold mb-4 pb-2"
-                style={{
-                  color: template.colors.text,
-                  borderBottom: `2px solid ${template.colors.primary}`
-                }}
-              >
-                Educación
-              </h2>
-              <div className="space-y-4">
-                {education.map((edu) => (
-                  <div key={edu.id} className="border-l-2 border-gray-200 pl-4">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h3 className="font-semibold text-lg">{edu.degree}</h3>
-                        <p
-                          className="font-medium"
-                          style={{ color: template.colors.primary }}
-                        >
-                          {edu.institution}
-                        </p>
-                        <p className="text-gray-600">{edu.field}</p>
+            {/* Educación */}
+            {sortedEducation.length > 0 && (
+              <section>
+                <h2
+                  className="text-xl font-bold mb-4 pb-2"
+                  style={{
+                    color: template.colors.text,
+                    borderBottom: `2px solid ${template.colors.primary}`
+                  }}
+                >
+                  Educación
+                </h2>
+                <div className="space-y-4">
+                  {sortedEducation.map((edu) => (
+                    <div key={edu.id} className="border-l-2 border-gray-200 pl-4">
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <h3 className="font-semibold text-lg">{edu.degree}</h3>
+                          <p
+                            className="font-medium"
+                            style={{ color: template.colors.primary }}
+                          >
+                            {edu.institution}
+                          </p>
+                          <p className="text-gray-600">{edu.field}</p>
+                        </div>
+                        <span className="text-sm text-gray-500">
+                          {edu.startDate} - {edu.current ? 'Presente' : edu.endDate}
+                        </span>
                       </div>
-                      <span className="text-sm text-gray-500">
-                        {edu.startDate} - {edu.current ? 'Presente' : edu.endDate}
-                      </span>
+                      {edu.gpa && (
+                        <p className="text-sm text-gray-600">GPA: {edu.gpa}</p>
+                      )}
+                      {edu.description && (
+                        <p className="text-gray-700 text-sm mt-1">{edu.description}</p>
+                      )}
                     </div>
-                    {edu.gpa && (
-                      <p className="text-sm text-gray-600">GPA: {edu.gpa}</p>
-                    )}
-                    {edu.description && (
-                      <p className="text-gray-700 text-sm mt-1">{edu.description}</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
+                  ))}
+                </div>
+              </section>
+            )}
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Habilidades */}
@@ -282,10 +298,11 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
                   </div>
                 ))}
               </div>
-            </section>
-          )}
+              </section>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

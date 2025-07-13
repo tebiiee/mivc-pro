@@ -1,5 +1,5 @@
 export interface PersonalInfo {
-  name: string;
+  fullName: string;
   email: string;
   phone: string;
   location: string;
@@ -12,11 +12,13 @@ export interface Experience {
   id: string;
   company: string;
   position: string;
+  location?: string;
   startDate: string;
   endDate: string;
   current: boolean;
   description: string;
   achievements: string[];
+  responsibilities?: string[];
 }
 
 export interface Education {
@@ -24,11 +26,13 @@ export interface Education {
   institution: string;
   degree: string;
   field: string;
+  location?: string;
   startDate: string;
   endDate: string;
   current: boolean;
   gpa?: string;
   description?: string;
+  details?: string;
 }
 
 export interface Skill {
@@ -56,6 +60,8 @@ export interface Project {
 
 export interface CVData {
   personalInfo: PersonalInfo;
+  summary?: string;
+  workExperience?: Experience[];
   experience: Experience[];
   education: Education[];
   skills: Skill[];

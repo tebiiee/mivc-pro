@@ -39,7 +39,7 @@ INSTRUCCIONES CLAVE PARA LA EXCELENCIA:
 FORMATO DE RESPUESTA (JSON - ESTRICTO):
 {
   "personalInfo": {
-    "name": "string",
+    "fullName": "string",
     "email": "string",
     "phone": "string",
     "location": "string",
@@ -47,17 +47,22 @@ FORMATO DE RESPUESTA (JSON - ESTRICTO):
     "linkedin": "string (opcional)",
     "website": "string (opcional)"
   },
+  "summary": "string (Resumen profesional general del CV, más detallado que el del personalInfo)",
   "experience": [
     {
       "id": "string",
       "company": "string",
       "position": "string",
+      "location": "string (opcional - ciudad, país)",
       "startDate": "YYYY-MM",
       "endDate": "YYYY-MM",
       "current": boolean,
       "description": "string (Descripción general del rol, concisa y orientada al impacto)",
       "achievements": [
         "string (Verbo de acción + logro cuantificable + impacto. Ej: 'Lideré la implementación de X, resultando en un aumento del Y% en Z.')"
+      ],
+      "responsibilities": [
+        "string (Lista de responsabilidades clave, usando verbos de acción)"
       ]
     }
   ],
@@ -67,11 +72,13 @@ FORMATO DE RESPUESTA (JSON - ESTRICTO):
       "institution": "string",
       "degree": "string",
       "field": "string",
+      "location": "string (opcional - ciudad, país)",
       "startDate": "YYYY-MM",
       "endDate": "YYYY-MM",
       "current": boolean,
       "gpa": "string (opcional)",
-      "description": "string (opcional - Destacar honores, proyectos relevantes o logros académicos)"
+      "description": "string (opcional - Destacar honores, proyectos relevantes o logros académicos)",
+      "details": "string (opcional - información adicional como honores, menciones especiales)"
     }
   ],
   "skills": [
@@ -108,6 +115,9 @@ export async function POST(request: NextRequest) {
   try {
     const { description } = await request.json()
 
+    // Log para debugging
+    console.log(`[${new Date().toISOString()}] Nueva solicitud de CV - Longitud: ${description?.length || 0} caracteres`)
+
     if (!description || description.trim().length < 50) {
       return NextResponse.json(
         { success: false, error: 'La descripción debe tener al menos 50 caracteres' },
@@ -122,33 +132,53 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const response = await fetch(OPENROUTER_URL, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://micv.pro',
-        'X-Title': 'micv.pro'
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.0-flash-exp:free',
-        messages: [
-          {
-            role: 'system',
-            content: SYSTEM_PROMPT
-          },
-          {
-            role: 'user', 
-            content: `Analiza la siguiente descripción y estructura la información en el formato JSON requerido:\n\n${description}`
-          }
-        ],
-        temperature: 0.3,
-        max_tokens: 2000
+    // Función para hacer la solicitud con retry
+    const makeRequest = async (retryCount = 0): Promise<Response> => {
+      console.log(`[${new Date().toISOString()}] Enviando request a OpenRouter (intento ${retryCount + 1})`)
+
+      const response = await fetch(OPENROUTER_URL, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://micv.pro',
+          'X-Title': 'micv.pro'
+        },
+        body: JSON.stringify({
+          model: 'google/gemini-2.0-flash-exp:free',
+          messages: [
+            {
+              role: 'system',
+              content: SYSTEM_PROMPT
+            },
+            {
+              role: 'user',
+              content: `Analiza la siguiente descripción y estructura la información en el formato JSON requerido:\n\n${description}`
+            }
+          ],
+          temperature: 0.3,
+          max_tokens: 2000
+        })
       })
-    })
+
+      // Si es error 429 y tenemos reintentos disponibles, esperar y reintentar
+      if (response.status === 429 && retryCount < 2) {
+        const waitTime = Math.pow(2, retryCount) * 1000 // Backoff exponencial: 1s, 2s
+        await new Promise(resolve => setTimeout(resolve, waitTime))
+        return makeRequest(retryCount + 1)
+      }
+
+      return response
+    }
+
+    const response = await makeRequest()
 
     if (!response.ok) {
-      throw new Error(`Error de OpenRouter: ${response.status}`)
+      const errorText = await response.text()
+      if (response.status === 429) {
+        throw new Error('Límite de solicitudes alcanzado. Por favor, espera unos minutos antes de intentar nuevamente.')
+      }
+      throw new Error(`Error de OpenRouter (${response.status}): ${errorText}`)
     }
 
     const data = await response.json()

@@ -54,7 +54,8 @@ export default function Home() {
         setError(result.error || 'Error procesando la información')
       }
     } catch (err) {
-      setError('Error de conexión. Por favor, intenta nuevamente.')
+      const errorMessage = err instanceof Error ? err.message : 'Error de conexión. Por favor, intenta nuevamente.'
+      setError(errorMessage)
       console.error('Error:', err)
     } finally {
       setTimeout(() => setIsProcessing(false), 3000)

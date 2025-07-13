@@ -10,13 +10,13 @@ export interface CVTemplate {
     text: string
     background: string
   }
-  layout: 'modern' | 'classic' | 'creative' | 'minimal'
+  layout: 'modern' | 'harvard'
 }
 
 export const CV_TEMPLATES: CVTemplate[] = [
   {
     id: 'modern-blue',
-    name: 'Moderno Azul',
+    name: 'Moderna',
     description: 'Diseño moderno con acentos azules, ideal para profesionales de tecnología',
     preview: '/templates/modern-blue.png',
     colors: {
@@ -30,8 +30,8 @@ export const CV_TEMPLATES: CVTemplate[] = [
   },
   {
     id: 'classic-gray',
-    name: 'Clásico Gris',
-    description: 'Diseño tradicional y elegante, perfecto para cualquier industria',
+    name: 'Moderna Gris',
+    description: 'Diseño moderno en tonos grises, elegante y profesional',
     preview: '/templates/classic-gray.png',
     colors: {
       primary: '#374151',
@@ -40,34 +40,20 @@ export const CV_TEMPLATES: CVTemplate[] = [
       text: '#111827',
       background: '#ffffff'
     },
-    layout: 'classic'
+    layout: 'modern'
   },
   {
-    id: 'creative-green',
-    name: 'Creativo Verde',
-    description: 'Diseño fresco y creativo, ideal para profesionales creativos',
-    preview: '/templates/creative-green.png',
-    colors: {
-      primary: '#059669',
-      secondary: '#047857',
-      accent: '#10b981',
-      text: '#1f2937',
-      background: '#ffffff'
-    },
-    layout: 'creative'
-  },
-  {
-    id: 'minimal-black',
-    name: 'Minimalista Negro',
-    description: 'Diseño limpio y minimalista, enfoque en el contenido',
-    preview: '/templates/minimal-black.png',
+    id: 'harvard',
+    name: 'Harvard',
+    description: 'Formato académico tradicional, inspirado en universidades de élite',
+    preview: '/templates/harvard.png',
     colors: {
       primary: '#000000',
-      secondary: '#374151',
-      accent: '#6b7280',
-      text: '#111827',
+      secondary: '#333333',
+      accent: '#666666',
+      text: '#000000',
       background: '#ffffff'
     },
-    layout: 'minimal'
+    layout: 'harvard'
   }
 ]
