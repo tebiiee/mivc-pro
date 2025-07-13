@@ -14,7 +14,7 @@ export async function generateAndDownloadPDF(data: CVData, template: CVTemplate)
     // Crear elemento de descarga
     const link = document.createElement('a')
     link.href = url
-    link.download = `CV_${data.personalInfo.name.replace(/\s+/g, '_')}.pdf`
+    link.download = `CV_${data.personalInfo.fullName.replace(/\s+/g, '_')}.pdf`
     
     // Simular click para descargar
     document.body.appendChild(link)

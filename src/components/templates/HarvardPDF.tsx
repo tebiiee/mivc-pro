@@ -9,7 +9,7 @@ interface HarvardPDFProps {
   template: CVTemplate
 }
 
-export function HarvardPDF({ data, template }: HarvardPDFProps) {
+export function HarvardPDF({ data }: HarvardPDFProps) {
   // Ordenar experiencia laboral por fecha (más reciente primero)
   const sortedWorkExperience = [...(data.workExperience || data.experience || [])].sort((a, b) => {
     const dateA = new Date(a.endDate || '9999-12-31')

@@ -7,7 +7,7 @@ interface HarvardTemplateProps {
   template: CVTemplate
 }
 
-export const HarvardTemplate: React.FC<HarvardTemplateProps> = ({ data, template }) => {
+export const HarvardTemplate: React.FC<HarvardTemplateProps> = ({ data }) => {
   // Ordenar experiencia laboral por fecha (más reciente primero)
   const sortedWorkExperience = [...(data.workExperience || [])].sort((a, b) => {
     const dateA = new Date(a.endDate || '9999-12-31')
@@ -164,7 +164,7 @@ export const HarvardTemplate: React.FC<HarvardTemplateProps> = ({ data, template
           <ul className="list-disc ml-6 space-y-1" style={{ fontSize: '10pt' }}>
             {data.skills.map((skill, index) => (
               <li key={index} className="text-justify">
-                {skill}
+                {typeof skill === 'string' ? skill : skill.name}
               </li>
             ))}
           </ul>
