@@ -44,7 +44,7 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
       flexDirection: 'column',
       backgroundColor: '#ffffff',
       padding: '20mm 25mm',
-      fontFamily: 'Times-Roman',
+      fontFamily: 'Helvetica',
       fontSize: 11,
       lineHeight: 1.3,
     },
@@ -56,7 +56,7 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
       fontSize: 18,
       fontWeight: 'bold',
       marginBottom: 8,
-      fontFamily: 'Times-Bold',
+      fontFamily: 'Helvetica-Bold',
     },
     headerContact: {
       fontSize: 10,
@@ -72,7 +72,7 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
       fontStyle: 'italic',
       textAlign: 'justify',
       marginBottom: 24,
-      fontFamily: 'Times-Italic',
+      fontFamily: 'Helvetica-Oblique',
     },
     sectionTitle: {
       fontSize: 12,
@@ -80,7 +80,7 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
       textTransform: 'uppercase',
       letterSpacing: 1,
       marginBottom: 12,
-      fontFamily: 'Times-Bold',
+      fontFamily: 'Helvetica-Bold',
     },
     sectionSeparator: {
       borderBottomWidth: 1,
@@ -106,12 +106,12 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
     companyName: {
       fontSize: 11,
       fontWeight: 'bold',
-      fontFamily: 'Times-Bold',
+      fontFamily: 'Helvetica-Bold',
     },
     position: {
       fontSize: 11,
       fontWeight: 'normal',
-      fontFamily: 'Times-Roman',
+      fontFamily: 'Helvetica',
     },
     location: {
       fontSize: 10,
@@ -120,7 +120,7 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
     dateRange: {
       fontSize: 10,
       fontStyle: 'italic',
-      fontFamily: 'Times-Italic',
+      fontFamily: 'Helvetica-Oblique',
     },
     responsibilities: {
       marginTop: 8,
@@ -143,16 +143,16 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
       fontSize: 11,
       fontWeight: 'bold',
       textTransform: 'uppercase',
-      fontFamily: 'Times-Bold',
+      fontFamily: 'Helvetica-Bold',
     },
     degree: {
       fontSize: 11,
-      fontFamily: 'Times-Roman',
+      fontFamily: 'Helvetica',
     },
     details: {
       fontSize: 10,
       fontStyle: 'italic',
-      fontFamily: 'Times-Italic',
+      fontFamily: 'Helvetica-Oblique',
     },
     skillsSection: {
       marginBottom: 16,
