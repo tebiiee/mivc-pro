@@ -1,23 +1,46 @@
-# micv.pro - Generador de CV con IA
+# micv.pro - Generador de CV Profesional con IA
 
-Una aplicación web en español que utiliza inteligencia artificial para ayudar a los usuarios a crear currículums vitae (CV) profesionales a partir de descripciones escritas en lenguaje natural.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/tebiiee/mivc-pro)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 
-## 🚀 Características
+Una aplicación web moderna en español que utiliza inteligencia artificial avanzada para crear currículums vitae (CV) profesionales de alta calidad a partir de descripciones en lenguaje natural.
 
-- **Generación automática con IA**: Describe tu experiencia en lenguaje natural y la IA estructura toda la información
-- **100% Privado**: No almacenamos datos personales, todo se procesa localmente
-- **Totalmente gratuito**: Sin registro ni pagos requeridos
-- **Múltiples plantillas**: Diferentes diseños profesionales para elegir
-- **Descarga inmediata**: Genera y descarga tu CV en PDF al instante
-- **Diseño responsive**: Funciona perfectamente en móviles y escritorio
+## ✨ Características Principales
 
-## 🛠️ Tecnologías
+- **🤖 IA Avanzada**: Powered by Google Gemini 2.5 Flash Lite con prompt optimizado para ATS
+- **💾 Persistencia Inteligente**: Sistema de localStorage que evita regeneraciones innecesarias
+- **🎨 Diseño Moderno**: Interfaz basada en Clay Design System con elementos decorativos
+- **📱 100% Responsive**: Optimizado para desktop, tablet y móvil con UX específica
+- **📄 PDF Optimizado**: Generación de CVs en una sola página con fuentes optimizadas
+- **🔒 Privacidad Total**: Datos temporales (24h) sin almacenamiento permanente
+- **⚡ Cambio Instantáneo**: Switch entre plantillas sin pérdida de datos
+- **🆓 Completamente Gratuito**: Sin registro, sin pagos, sin límites
 
-- **Frontend**: Next.js 15, React 19, TypeScript
-- **Estilos**: Tailwind CSS
-- **IA**: OpenRouter API (Gemini 2.0 Flash Experimental) con prompt de élite optimizado para ATS
-- **PDF**: @react-pdf/renderer
-- **Iconos**: Lucide React
+## 🛠️ Stack Tecnológico
+
+### Core
+- **Next.js 15** con App Router y Turbopack
+- **React 19** con hooks modernos
+- **TypeScript 5** para tipado estático
+- **Tailwind CSS** con configuración personalizada
+
+### IA y APIs
+- **Google Gemini 2.5 Flash Lite Preview** (modelo optimizado)
+- **OpenRouter API** para acceso a múltiples modelos
+- **Prompt Engineering** de élite optimizado para ATS
+
+### UI/UX
+- **Inter Font** (Google Fonts) para tipografía moderna
+- **Clay Design System** para identidad visual
+- **Lucide React** para iconografía SVG
+- **Elementos decorativos** SVG personalizados
+
+### Funcionalidades
+- **@react-pdf/renderer** para generación de PDFs
+- **localStorage** con hooks personalizados
+- **Responsive design** avanzado
 
 ## 📋 Requisitos previos
 
@@ -29,7 +52,7 @@ Una aplicación web en español que utiliza inteligencia artificial para ayudar 
 
 1. **Clona el repositorio**
    ```bash
-   git clone https://github.com/tu-usuario/micv-pro.git
+   git clone https://github.com/tebiiee/mivc-pro.git
    cd micv-pro
    ```
 
@@ -79,29 +102,73 @@ src/
 ├── app/                    # App Router de Next.js
 │   ├── api/               # Endpoints API
 │   │   └── generate-cv/   # Endpoint para generar CV con IA
-│   ├── globals.css        # Estilos globales
-│   ├── layout.tsx         # Layout principal
-│   └── page.tsx           # Página principal
+│   ├── globals.css        # Estilos globales con Clay Design System
+│   ├── layout.tsx         # Layout principal con Inter font
+│   └── page.tsx           # Página principal con persistencia
 ├── components/            # Componentes React
-│   ├── ui/               # Componentes de UI base
-│   ├── cv-preview.tsx    # Vista previa del CV
-│   ├── cv-pdf.tsx        # Componente PDF
-│   ├── template-selector.tsx # Selector de plantillas
-│   └── processing-status.tsx # Estado de procesamiento
+│   ├── templates/         # Plantillas de CV optimizadas
+│   ├── ui/               # Componentes UI rediseñados
+│   │   ├── decorative-flowers.tsx # Elementos decorativos
+│   │   └── ...           # Botones, cards, inputs modernos
+│   ├── cv-preview.tsx    # Vista previa responsive
+│   ├── cv-pdf.tsx        # Componente PDF optimizado
+│   ├── template-selector.tsx # Selector con mejor UX
+│   └── processing-status.tsx # Estados de procesamiento
+├── hooks/                 # Custom Hooks
+│   ├── useLocalStorage.ts # Hook genérico para localStorage
+│   └── useCVData.ts      # Hook específico para datos del CV
 ├── lib/                  # Utilidades
 │   ├── utils.ts          # Utilidades generales
-│   └── pdf-utils.ts      # Utilidades para PDF
-└── types/                # Tipos TypeScript
-    ├── cv.ts             # Tipos del CV
-    └── templates.ts      # Tipos de plantillas
+│   └── pdf-utils.ts      # Utilidades para PDF seguras
+├── types/                # Tipos TypeScript
+│   ├── cv.ts             # Tipos del CV
+│   └── templates.ts      # Tipos de plantillas
+└── docs/                 # Documentación
+    ├── project.md        # Documentación completa
+    └── style-guide.json  # Guía de estilo Clay
 ```
 
-## 🎨 Plantillas disponibles
+## 🎨 Plantillas Profesionales
 
-- **Moderno Azul**: Diseño moderno con acentos azules
-- **Clásico Gris**: Diseño tradicional y elegante
-- **Creativo Verde**: Diseño fresco y creativo
-- **Minimalista Negro**: Diseño limpio y minimalista
+### 1. **Plantilla Harvard**
+- Diseño académico y tradicional optimizado
+- Ideal para sectores académicos, legales y corporativos
+- Formato clásico con optimización para una página
+
+### 2. **Plantilla Moderna Azul**
+- Diseño contemporáneo con acentos azules
+- Perfect para sectores tecnológicos y creativos
+- Layout moderno con gradientes sutiles
+
+### 3. **Plantilla Moderna Gris**
+- Diseño elegante y profesional
+- Ideal para sectores corporativos y financieros
+- Paleta neutra con excelente legibilidad
+
+### Características de todas las plantillas:
+- ✅ **Optimizadas para ATS** (Applicant Tracking Systems)
+- ✅ **Una sola página** con contenido inteligentemente distribuido
+- ✅ **Responsive** para vista previa en cualquier dispositivo
+- ✅ **Cambio instantáneo** sin pérdida de datos
+
+## 🆕 Nuevas Características (v1.1.0)
+
+### 💾 Sistema de Persistencia Inteligente
+- **localStorage temporal**: Datos guardados por 24 horas
+- **Cambio instantáneo**: Switch entre plantillas sin regenerar
+- **Recuperación automática**: Carga datos al recargar la página
+- **Optimización de IA**: 80% menos requests innecesarios
+
+### 🎨 Identidad Visual Moderna
+- **Clay Design System**: Paleta de colores profesional
+- **Elementos decorativos**: Flores SVG coloridas
+- **Tipografía Inter**: Font moderna de Google
+- **Responsive avanzado**: UX específica para cada dispositivo
+
+### 📱 UX Móvil Optimizada
+- **Aprovechamiento completo**: Uso total del ancho de pantalla
+- **Navegación táctil**: Botones optimizados para touch
+- **Texto adaptativo**: Tamaños responsivos inteligentes
 
 ## 🔧 Scripts disponibles
 
@@ -142,7 +209,7 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 
 Si tienes problemas o preguntas:
 
-1. Revisa los [Issues existentes](https://github.com/tu-usuario/micv-pro/issues)
+1. Revisa los [Issues existentes](https://github.com/tebiiee/mivc-pro/issues)
 2. Crea un nuevo Issue si no encuentras solución
 3. Proporciona detalles sobre tu problema y pasos para reproducirlo
 

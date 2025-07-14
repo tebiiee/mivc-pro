@@ -14,8 +14,8 @@ export function TemplateSelector({ selectedTemplate, onTemplateSelect, onContinu
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2">Elige una plantilla para tu CV</h2>
-        <p className="text-gray-600 dark:text-gray-400">
+        <h2 className="text-2xl font-bold mb-2 text-gray-900">Elige una plantilla para tu CV</h2>
+        <p className="text-gray-600">
           Selecciona el diseño que mejor represente tu estilo profesional
         </p>
       </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -12,6 +12,7 @@ import { TemplateSelector } from '@/components/template-selector'
 import { ProcessingStatus } from '@/components/processing-status'
 import { DecorativeFlowers } from '@/components/ui/decorative-flowers'
 import { generateAndDownloadPDF } from '@/lib/pdf-utils'
+import { useCVData } from '@/hooks/useCVData'
 
 export default function Home() {
   const [description, setDescription] = useState('')
@@ -20,11 +21,34 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null)
   const [selectedTemplate, setSelectedTemplate] = useState<CVTemplate>(CV_TEMPLATES[0])
   const [showTemplateSelector, setShowTemplateSelector] = useState(false)
+
+  // Hook para manejar datos del CV en localStorage
+  const { saveCVData, getCVData, hasDataForDescription, clearSession, hasActiveSession } = useCVData()
+
+  // Cargar datos existentes al iniciar la aplicación
+  useEffect(() => {
+    const existingData = getCVData()
+    if (existingData) {
+      setDescription(existingData.description)
+      setCvData(existingData.cvData)
+      setShowTemplateSelector(true)
+    }
+  }, [])
   const [processingStage, setProcessingStage] = useState<'analyzing' | 'structuring' | 'formatting' | 'complete'>('analyzing')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!description.trim() || description.trim().length < 50) return
+
+    // Verificar si ya tenemos datos para esta descripción
+    if (hasDataForDescription(description.trim())) {
+      const existingData = getCVData()
+      if (existingData) {
+        setCvData(existingData.cvData)
+        setShowTemplateSelector(true)
+        return
+      }
+    }
 
     setIsProcessing(true)
     setError(null)
@@ -49,6 +73,8 @@ export default function Home() {
         setProcessingStage('complete')
         setTimeout(() => {
           setCvData(result.data!)
+          // Guardar en localStorage
+          saveCVData(description.trim(), result.data!)
           setShowTemplateSelector(true)
         }, 500)
       } else {
@@ -76,6 +102,8 @@ export default function Home() {
     setCvData(null)
     setError(null)
     setShowTemplateSelector(false)
+    // Limpiar la sesión para forzar nueva generación cuando se edite
+    clearSession()
   }
 
   const handleTemplateSelect = (template: CVTemplate) => {
@@ -95,6 +123,8 @@ export default function Home() {
     setError(null)
     setShowTemplateSelector(false)
     setDescription('')
+    // Limpiar la sesión de localStorage
+    clearSession()
   }
 
   return (
@@ -220,9 +250,18 @@ export default function Home() {
                 </div>
 
                 {error && (
-                  <div className="flex items-center gap-2 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
-                    <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
-                    <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                  <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-md">
+                    <AlertCircle className="h-4 w-4 text-red-600" />
+                    <p className="text-sm text-red-600">{error}</p>
+                  </div>
+                )}
+
+                {hasActiveSession() && (
+                  <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                    <FileText className="h-4 w-4 text-blue-600" />
+                    <p className="text-sm text-blue-600">
+                      Tienes un CV guardado. Puedes editarlo o generar uno nuevo.
+                    </p>
                   </div>
                 )}
 
