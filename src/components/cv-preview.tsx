@@ -30,87 +30,91 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
   })
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-6 px-4">
       {/* Header con botones de acción */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <h2 className="text-2xl font-bold">Vista previa de tu CV</h2>
-        <div className="flex flex-wrap gap-3">
-          <Button variant="outline" onClick={onHome} className="gap-2">
-            <Home className="h-4 w-4" />
-            Volver al inicio
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Vista previa de tu CV</h2>
+        <div className="flex flex-wrap gap-2 sm:gap-3 justify-center sm:justify-end">
+          <Button variant="outline" onClick={onHome} className="gap-2 text-xs sm:text-sm">
+            <Home className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">Volver al inicio</span>
+            <span className="sm:hidden">Inicio</span>
           </Button>
-          <Button variant="outline" onClick={onChangeTemplate} className="gap-2">
-            <Palette className="h-4 w-4" />
-            Cambiar plantilla
+          <Button variant="outline" onClick={onChangeTemplate} className="gap-2 text-xs sm:text-sm">
+            <Palette className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">Cambiar plantilla</span>
+            <span className="sm:hidden">Plantilla</span>
           </Button>
-          <Button variant="outline" onClick={onEdit}>
-            Editar información
+          <Button variant="outline" onClick={onEdit} className="text-xs sm:text-sm">
+            <span className="hidden sm:inline">Editar información</span>
+            <span className="sm:hidden">Editar</span>
           </Button>
-          <Button onClick={onDownload} className="gap-2">
-            <Download className="h-4 w-4" />
-            Descargar PDF
+          <Button onClick={onDownload} className="gap-2 text-xs sm:text-sm">
+            <Download className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">Descargar PDF</span>
+            <span className="sm:hidden">PDF</span>
           </Button>
         </div>
       </div>
 
-      {/* CV Preview - Centrado y con mejor layout */}
+      {/* CV Preview - Optimizado para móviles */}
       <div className="flex justify-center">
         {template.layout === 'harvard' ? (
-          <div className="w-full max-w-[210mm]">
+          <div className="w-full max-w-[210mm] min-h-[297mm]">
             <HarvardTemplate data={data} template={template} />
           </div>
         ) : (
-          <div className="w-full max-w-[210mm] bg-white shadow-lg rounded-lg overflow-hidden" id="cv-content">
+          <div className="w-full max-w-[210mm] min-h-[297mm] bg-white shadow-lg rounded-lg overflow-hidden" id="cv-content">
           {/* Header del CV */}
           <div
-            className="text-white p-8"
+            className="text-white p-4 sm:p-6 md:p-8"
             style={{
               background: `linear-gradient(135deg, ${template.colors.primary} 0%, ${template.colors.secondary} 100%)`
             }}
           >
-            <h1 className="text-3xl font-bold mb-2 text-white">{personalInfo.fullName}</h1>
-            <p className="text-white/95 text-lg mb-4">{personalInfo.summary}</p>
-          
-          <div className="flex flex-wrap gap-4 text-sm text-white/95">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-white">{personalInfo.fullName}</h1>
+            <p className="text-white/95 text-base sm:text-lg mb-4">{personalInfo.summary}</p>
+
+          <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-white/95">
             {personalInfo.email && (
               <div className="flex items-center gap-1">
-                <Mail className="h-4 w-4" />
-                <span>{personalInfo.email}</span>
+                <Mail className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="text-xs sm:text-sm">{personalInfo.email}</span>
               </div>
             )}
             {personalInfo.phone && (
               <div className="flex items-center gap-1">
-                <Phone className="h-4 w-4" />
-                <span>{personalInfo.phone}</span>
+                <Phone className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="text-xs sm:text-sm">{personalInfo.phone}</span>
               </div>
             )}
             {personalInfo.location && (
               <div className="flex items-center gap-1">
-                <MapPin className="h-4 w-4" />
-                <span>{personalInfo.location}</span>
+                <MapPin className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="text-xs sm:text-sm">{personalInfo.location}</span>
               </div>
             )}
             {personalInfo.linkedin && (
               <div className="flex items-center gap-1">
-                <Linkedin className="h-4 w-4" />
-                <span>{personalInfo.linkedin}</span>
+                <Linkedin className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="text-xs sm:text-sm">{personalInfo.linkedin}</span>
               </div>
             )}
             {personalInfo.website && (
               <div className="flex items-center gap-1">
-                <Globe className="h-4 w-4" />
-                <span>{personalInfo.website}</span>
+                <Globe className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="text-xs sm:text-sm">{personalInfo.website}</span>
               </div>
             )}
           </div>
         </div>
 
-          <div className="p-8 space-y-8">
+          <div className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 md:space-y-8">
             {/* Experiencia */}
             {sortedExperience.length > 0 && (
               <section>
                 <h2
-                  className="text-xl font-bold mb-4 pb-2 text-gray-900"
+                  className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 pb-2 text-gray-900"
                   style={{
                     borderBottom: `2px solid ${template.colors.primary}`
                   }}
