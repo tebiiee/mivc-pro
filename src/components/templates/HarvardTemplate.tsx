@@ -42,17 +42,17 @@ export const HarvardTemplate: React.FC<HarvardTemplateProps> = ({ data, language
 
   return (
     <div
-      className="w-full mx-auto bg-white text-black font-serif leading-tight px-4 md:px-8 lg:px-12"
+      className="w-full mx-auto bg-white text-black font-serif leading-tight px-2 sm:px-4 md:px-8 lg:px-12"
       style={{
         minHeight: '297mm',
-        padding: '15mm 20mm',
-        fontSize: '11pt',
+        padding: '8mm 10mm sm:15mm sm:20mm',
+        fontSize: 'clamp(9pt, 2.5vw, 11pt)',
         lineHeight: '1.3'
       }}
     >
       {/* Header */}
-      <div className="text-center mb-4 md:mb-6">
-        <h1 className="text-xl md:text-2xl font-bold mb-2" style={{ fontSize: 'clamp(16pt, 4vw, 18pt)' }}>
+      <div className="text-center mb-3 sm:mb-4 md:mb-6">
+        <h1 className="text-lg sm:text-xl md:text-2xl font-bold mb-2" style={{ fontSize: 'clamp(14pt, 4vw, 18pt)' }}>
           {data.personalInfo.fullName}
         </h1>
         <div className="text-xs md:text-sm flex flex-wrap justify-center gap-1 md:gap-2" style={{ fontSize: 'clamp(9pt, 2.5vw, 10pt)' }}>

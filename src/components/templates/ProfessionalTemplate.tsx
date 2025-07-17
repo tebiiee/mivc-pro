@@ -44,12 +44,12 @@ export const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ data
 
   return (
     <div className="w-full mx-auto bg-white shadow-lg overflow-hidden" style={{ minHeight: '297mm' }}>
-      <div className="flex flex-col md:flex-row min-h-full">
+      <div className="flex flex-row min-h-full">
         {/* Columna Principal (Izquierda) */}
-        <div className="flex-1 p-6 md:p-8 space-y-6">
+        <div className="flex-1 p-3 sm:p-6 md:p-8 space-y-4 sm:space-y-6">
           {/* Header con nombre */}
-          <div className="mb-6">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+          <div className="mb-4 sm:mb-6">
+            <h1 className="text-lg sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2">
               {data.personalInfo.fullName}
             </h1>
           </div>
@@ -57,10 +57,10 @@ export const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ data
           {/* Perfil Profesional */}
           {data.summary && (
             <div className="space-y-3">
-              <h2 className="text-lg md:text-xl font-bold text-gray-900 border-b-2 border-gray-200 pb-1">
+              <h2 className="text-sm sm:text-lg md:text-xl font-bold text-gray-900 border-b-2 border-gray-200 pb-1">
                 Perfil Profesional
               </h2>
-              <p className="text-gray-700 text-sm md:text-base leading-relaxed text-justify">
+              <p className="text-gray-700 text-xs sm:text-sm md:text-base leading-relaxed text-justify">
                 {data.summary}
               </p>
             </div>
@@ -69,7 +69,7 @@ export const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ data
           {/* Experiencia Laboral */}
           {sortedWorkExperience.length > 0 && (
             <div className="space-y-4">
-              <h2 className="text-lg md:text-xl font-bold text-gray-900 border-b-2 border-gray-200 pb-1">
+              <h2 className="text-sm sm:text-lg md:text-xl font-bold text-gray-900 border-b-2 border-gray-200 pb-1">
                 {t.sections.experience}
               </h2>
               {sortedWorkExperience.map((exp, index) => (
@@ -107,7 +107,7 @@ export const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ data
           {/* Educación */}
           {sortedEducation.length > 0 && (
             <div className="space-y-4">
-              <h2 className="text-lg md:text-xl font-bold text-gray-900 border-b-2 border-gray-200 pb-1">
+              <h2 className="text-sm sm:text-lg md:text-xl font-bold text-gray-900 border-b-2 border-gray-200 pb-1">
                 {t.sections.education}
               </h2>
               {sortedEducation.map((edu, index) => (
@@ -135,16 +135,16 @@ export const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ data
         </div>
 
         {/* Sidebar Derecho */}
-        <div 
-          className="w-full md:w-80 p-6 md:p-8 text-white space-y-6"
+        <div
+          className="w-full sm:w-64 md:w-80 p-3 sm:p-6 md:p-8 text-white space-y-4 sm:space-y-6"
           style={{ backgroundColor: template.colors.primary }}
         >
           {/* Información de Contacto */}
           <div className="space-y-4">
-            <h2 className="text-lg md:text-xl font-bold border-b-2 border-white/30 pb-2">
+            <h2 className="text-sm sm:text-lg md:text-xl font-bold border-b-2 border-white/30 pb-2">
               Contacto
             </h2>
-            <div className="space-y-3 text-sm md:text-base">
+            <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm md:text-base">
               {data.personalInfo.location && (
                 <div className="flex items-center gap-3">
                   <MapPin className="h-4 w-4 flex-shrink-0" />
@@ -181,7 +181,7 @@ export const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ data
           {/* Habilidades */}
           {data.skills && data.skills.length > 0 && (
             <div className="space-y-4">
-              <h2 className="text-lg md:text-xl font-bold border-b-2 border-white/30 pb-2">
+              <h2 className="text-sm sm:text-lg md:text-xl font-bold border-b-2 border-white/30 pb-2">
                 {t.sections.skills}
               </h2>
               <div className="space-y-4">
@@ -225,7 +225,7 @@ export const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ data
           {/* Idiomas */}
           {data.languages && data.languages.length > 0 && (
             <div className="space-y-4">
-              <h2 className="text-lg md:text-xl font-bold border-b-2 border-white/30 pb-2">
+              <h2 className="text-sm sm:text-lg md:text-xl font-bold border-b-2 border-white/30 pb-2">
                 {t.sections.languages}
               </h2>
               <div className="space-y-2">

@@ -115,25 +115,25 @@ export function CVPreview({
       </div>
 
       {/* CV Preview - Optimizado para móviles */}
-      <div className="flex justify-center">
+      <div className="w-full px-2 sm:px-4 lg:flex lg:justify-center">
         {template.layout === 'harvard' ? (
-          <div className="w-full max-w-[280mm] min-h-[396mm] scale-75 sm:scale-85 lg:scale-100 shadow-lg">
+          <div className="w-full lg:max-w-[280mm] min-h-screen sm:min-h-[396mm] shadow-lg">
             <HarvardTemplate data={data} template={template} language={language} />
           </div>
         ) : template.layout === 'professional' ? (
-          <div className="w-full max-w-[280mm] min-h-[396mm] scale-75 sm:scale-85 lg:scale-100 shadow-lg">
+          <div className="w-full lg:max-w-[280mm] min-h-screen sm:min-h-[396mm] shadow-lg">
             <ProfessionalTemplate data={data} template={template} language={language} />
           </div>
         ) : (
-          <div className="w-full max-w-[280mm] min-h-[396mm] scale-75 sm:scale-85 lg:scale-100 bg-white shadow-lg rounded-lg overflow-hidden" id="cv-content">
+          <div className="w-full lg:max-w-[280mm] min-h-screen sm:min-h-[396mm] bg-white shadow-lg rounded-lg overflow-hidden" id="cv-content">
           {/* Header del CV */}
           <div
-            className="text-white p-4 sm:p-6 md:p-8"
+            className="text-white p-3 sm:p-4 md:p-6 lg:p-8"
             style={{
               background: `linear-gradient(135deg, ${template.colors.primary} 0%, ${template.colors.secondary} 100%)`
             }}
           >
-            <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-white">{personalInfo.fullName}</h1>
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 text-white">{personalInfo.fullName}</h1>
 
           <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-white/95">
             {personalInfo.email && (
@@ -169,12 +169,12 @@ export function CVPreview({
           </div>
         </div>
 
-          <div className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 md:space-y-8">
+          <div className="p-3 sm:p-4 md:p-6 lg:p-8 space-y-3 sm:space-y-4 md:space-y-6 lg:space-y-8">
             {/* Perfil Profesional */}
             {data.summary && (
               <section>
                 <h2
-                  className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 pb-2 text-gray-900"
+                  className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-3 md:mb-4 pb-2 text-gray-900"
                   style={{
                     borderBottom: `2px solid ${template.colors.primary}`
                   }}
@@ -191,7 +191,7 @@ export function CVPreview({
             {sortedExperience.length > 0 && (
               <section>
                 <h2
-                  className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 pb-2 text-gray-900"
+                  className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-3 md:mb-4 pb-2 text-gray-900"
                   style={{
                     borderBottom: `2px solid ${template.colors.primary}`
                   }}
@@ -233,7 +233,7 @@ export function CVPreview({
             {sortedEducation.length > 0 && (
               <section>
                 <h2
-                  className="text-xl font-bold mb-4 pb-2 text-gray-900"
+                  className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-3 md:mb-4 pb-2 text-gray-900"
                   style={{
                     borderBottom: `2px solid ${template.colors.primary}`
                   }}
@@ -275,7 +275,7 @@ export function CVPreview({
             {skills.length > 0 && (
               <section>
                 <h2
-                  className="text-xl font-bold mb-4 pb-2 text-gray-900"
+                  className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-3 md:mb-4 pb-2 text-gray-900"
                   style={{
                     borderBottom: `2px solid ${template.colors.primary}`
                   }}
