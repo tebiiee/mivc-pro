@@ -12,17 +12,67 @@ interface ProfessionalTemplateProps {
 
 export const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ data, template, language = 'spanish' }) => {
   const t = getTranslations(language)
+
+  // Función para traducir categorías de habilidades
+  const translateSkillCategory = (category: string): string => {
+    const categoryMap: Record<string, keyof typeof t.skillCategories> = {
+      'Habilidades Técnicas': 'technical',
+      'Technical Skills': 'technical',
+      'Habilidades Blandas': 'soft',
+      'Soft Skills': 'soft',
+      'Herramientas': 'tools',
+      'Tools': 'tools',
+      'Idiomas': 'languages',
+      'Languages': 'languages'
+    }
+
+    const key = categoryMap[category]
+    return key ? t.skillCategories[key] : category
+  }
   // Ordenar experiencia laboral por fecha (más reciente primero)
   const sortedWorkExperience = [...(data.experience || [])].sort((a, b) => {
-    const dateA = new Date(a.endDate || '9999-12-31')
-    const dateB = new Date(b.endDate || '9999-12-31')
+    // Función para obtener la fecha más relevante para ordenamiento
+    const getDateForSort = (item: any) => {
+      // Para trabajos actuales, usar startDate para ordenar correctamente
+      if (item.current) {
+        return item.startDate ? new Date(item.startDate) : new Date('1900-01-01')
+      }
+      // Para trabajos terminados, usar endDate
+      if (item.endDate) return new Date(item.endDate)
+      // Fallback a startDate
+      if (item.startDate) return new Date(item.startDate)
+      return new Date('1900-01-01')
+    }
+
+    const dateA = getDateForSort(a)
+    const dateB = getDateForSort(b)
+
+    // Si ambos son trabajos actuales, ordenar por startDate (más reciente primero)
+    if (a.current && b.current) {
+      const startA = a.startDate ? new Date(a.startDate) : new Date('1900-01-01')
+      const startB = b.startDate ? new Date(b.startDate) : new Date('1900-01-01')
+      return startB.getTime() - startA.getTime()
+    }
+
+    // Si solo uno es actual, va primero
+    if (a.current && !b.current) return -1
+    if (!a.current && b.current) return 1
+
+    // Para trabajos no actuales, ordenar por endDate (más reciente primero)
     return dateB.getTime() - dateA.getTime()
   })
 
   // Ordenar educación por fecha (más reciente primero)
   const sortedEducation = [...(data.education || [])].sort((a, b) => {
-    const dateA = new Date(a.endDate || '9999-12-31')
-    const dateB = new Date(b.endDate || '9999-12-31')
+    const getDateForSort = (item: any) => {
+      if (item.current) return new Date('9999-12-31')
+      if (item.endDate) return new Date(item.endDate)
+      if (item.startDate) return new Date(item.startDate)
+      return new Date('1900-01-01')
+    }
+
+    const dateA = getDateForSort(a)
+    const dateB = getDateForSort(b)
     return dateB.getTime() - dateA.getTime()
   })
 
@@ -30,15 +80,19 @@ export const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ data
   const formatDate = (dateString: string) => {
     if (!dateString) return ''
     const date = new Date(dateString)
-    return date.toLocaleDateString('es-ES', { 
-      year: 'numeric', 
-      month: 'long' 
+    // Verificar si la fecha es válida
+    if (isNaN(date.getTime())) return dateString
+
+    const locale = language === 'spanish' ? 'es-ES' : 'en-US'
+    return date.toLocaleDateString(locale, {
+      year: 'numeric',
+      month: 'long'
     })
   }
 
-  const formatDateRange = (startDate: string, endDate: string) => {
+  const formatDateRange = (startDate: string, endDate: string, current?: boolean) => {
     const start = formatDate(startDate)
-    const end = endDate ? formatDate(endDate) : 'Presente'
+    const end = current ? t.common.present : (endDate ? formatDate(endDate) : t.common.present)
     return `${start} - ${end}`
   }
 
@@ -58,7 +112,7 @@ export const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ data
           {data.summary && (
             <div className="space-y-3">
               <h2 className="text-sm sm:text-lg md:text-xl font-bold text-gray-900 border-b-2 border-gray-200 pb-1">
-                Perfil Profesional
+                {t.sections.professionalProfile}
               </h2>
               <p className="text-gray-700 text-xs sm:text-sm md:text-base leading-relaxed text-justify">
                 {data.summary}
@@ -84,7 +138,7 @@ export const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ data
                       )}
                     </div>
                     <p className="text-gray-500 text-xs md:text-sm font-medium whitespace-nowrap">
-                      {formatDateRange(exp.startDate, exp.endDate)}
+                      {formatDateRange(exp.startDate, exp.endDate, exp.current)}
                     </p>
                   </div>
                   {exp.description && (
@@ -122,11 +176,52 @@ export const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ data
                       )}
                     </div>
                     <p className="text-gray-500 text-xs md:text-sm font-medium whitespace-nowrap">
-                      {formatDateRange(edu.startDate, edu.endDate)}
+                      {formatDateRange(edu.startDate, edu.endDate, edu.current)}
                     </p>
                   </div>
                   {edu.details && (
                     <p className="text-gray-700 text-xs md:text-sm">{edu.details}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Proyectos */}
+          {data.projects && data.projects.length > 0 && (
+            <div className="space-y-4">
+              <h2 className="text-sm sm:text-lg md:text-xl font-bold text-gray-900 border-b-2 border-gray-200 pb-1">
+                {t.sections.projects}
+              </h2>
+              {data.projects.map((project, index) => (
+                <div key={index} className="space-y-2">
+                  <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-1">
+                    <div>
+                      <h3 className="font-bold text-gray-900 text-sm md:text-base">
+                        {project.name}
+                      </h3>
+                      {project.url && (
+                        <p className="text-gray-600 text-xs md:text-sm break-all">{project.url}</p>
+                      )}
+                    </div>
+                    <p className="text-gray-500 text-xs md:text-sm font-medium whitespace-nowrap">
+                      {project.startDate} - {project.endDate || t.common.present}
+                    </p>
+                  </div>
+                  <p className="text-gray-700 text-xs md:text-sm leading-relaxed">
+                    {project.description}
+                  </p>
+                  {project.technologies && project.technologies.length > 0 && (
+                    <div className="flex flex-wrap gap-1">
+                      {project.technologies.map((tech, techIndex) => (
+                        <span
+                          key={techIndex}
+                          className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
                   )}
                 </div>
               ))}
@@ -142,7 +237,7 @@ export const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ data
           {/* Información de Contacto */}
           <div className="space-y-4">
             <h2 className="text-sm sm:text-lg md:text-xl font-bold border-b-2 border-white/30 pb-2">
-              Contacto
+              {language === 'spanish' ? 'Contacto' : 'Contact'}
             </h2>
             <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm md:text-base">
               {data.personalInfo.location && (
@@ -194,7 +289,7 @@ export const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ data
                 ).map(([category, categorySkills]) => (
                   <div key={category} className="space-y-2">
                     <h3 className="text-sm md:text-base font-bold text-white/90 border-b border-white/20 pb-1">
-                      {category}
+                      {translateSkillCategory(category)}
                     </h3>
                     <div className="space-y-2">
                       {categorySkills.slice(0, 4).map((skill, index) => (
@@ -238,6 +333,8 @@ export const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ data
               </div>
             </div>
           )}
+
+
         </div>
       </div>
     </div>

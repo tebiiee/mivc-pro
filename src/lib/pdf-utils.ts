@@ -53,11 +53,11 @@ export async function generateAndDownloadBilingualPDF(
       .trim()
 
     // Generar PDF en español
-    const spanishPdfBlob = await pdf(CVPDF({ data: spanishData, template })).toBlob()
+    const spanishPdfBlob = await pdf(CVPDF({ data: spanishData, template, language: 'spanish' })).toBlob()
     const spanishUrl = URL.createObjectURL(spanishPdfBlob)
 
     // Generar PDF en inglés
-    const englishPdfBlob = await pdf(CVPDF({ data: englishData, template })).toBlob()
+    const englishPdfBlob = await pdf(CVPDF({ data: englishData, template, language: 'english' })).toBlob()
     const englishUrl = URL.createObjectURL(englishPdfBlob)
 
     // Descargar PDF en español

@@ -198,31 +198,38 @@ export default function Home() {
       {/* Header */}
       <header className="container mx-auto px-4 py-12 relative z-10">
         <div className="text-center max-w-4xl mx-auto">
+          {/* Título siempre visible */}
           <div className="flex items-center justify-center gap-3 mb-8">
             <FileText className="h-10 w-10 text-black" />
             <h1 className="headline text-black">
               micv.pro
             </h1>
           </div>
-          <h2 className="headline text-black mb-6 max-w-3xl mx-auto leading-tight">
-            Crea tu currículum profesional con inteligencia artificial
-          </h2>
-          <p className="subheadline text-gray-600 max-w-2xl mx-auto mb-8">
-            Describe tu experiencia en lenguaje natural y obtén un CV listo para descargar en segundos
-          </p>
-          <div className="flex justify-center">
-            <Button
-              size="lg"
-              className="px-8 py-4 text-lg font-semibold rounded-lg"
-              onClick={() => {
-                const formElement = document.querySelector('#main-form');
-                formElement?.scrollIntoView({ behavior: 'smooth' });
-              }}
-            >
-              <Sparkles className="mr-2 h-5 w-5" />
-              Comenzar gratis
-            </Button>
-          </div>
+
+          {/* Texto promocional - Solo mostrar si no hay CV generado */}
+          {!((hasData && getCurrentCV()) || cvData) && (
+            <>
+              <h2 className="headline text-black mb-6 max-w-3xl mx-auto leading-tight">
+                Crea tu currículum profesional con inteligencia artificial
+              </h2>
+              <p className="subheadline text-gray-600 max-w-2xl mx-auto mb-8">
+                Describe tu experiencia en lenguaje natural y obtén un CV listo para descargar en segundos
+              </p>
+              <div className="flex justify-center">
+                <Button
+                  size="lg"
+                  className="px-8 py-4 text-lg font-semibold rounded-lg"
+                  onClick={() => {
+                    const formElement = document.querySelector('#main-form');
+                    formElement?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  <Sparkles className="mr-2 h-5 w-5" />
+                  Comenzar gratis
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </header>
 

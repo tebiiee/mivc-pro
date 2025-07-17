@@ -11,32 +11,88 @@ interface HarvardTemplateProps {
 
 export const HarvardTemplate: React.FC<HarvardTemplateProps> = ({ data, language = 'spanish' }) => {
   const t = getTranslations(language)
+
+  // Función para traducir categorías de habilidades
+  const translateSkillCategory = (category: string): string => {
+    const categoryMap: Record<string, keyof typeof t.skillCategories> = {
+      'Habilidades Técnicas': 'technical',
+      'Technical Skills': 'technical',
+      'Habilidades Blandas': 'soft',
+      'Soft Skills': 'soft',
+      'Herramientas': 'tools',
+      'Tools': 'tools',
+      'Idiomas': 'languages',
+      'Languages': 'languages'
+    }
+
+    const key = categoryMap[category]
+    return key ? t.skillCategories[key] : category
+  }
   // Ordenar experiencia laboral por fecha (más reciente primero)
   const sortedWorkExperience = [...(data.experience || [])].sort((a, b) => {
-    const dateA = new Date(a.endDate || '9999-12-31')
-    const dateB = new Date(b.endDate || '9999-12-31')
+    // Función para obtener la fecha más relevante para ordenamiento
+    const getDateForSort = (item: any) => {
+      // Para trabajos actuales, usar startDate para ordenar correctamente
+      if (item.current) {
+        return item.startDate ? new Date(item.startDate) : new Date('1900-01-01')
+      }
+      // Para trabajos terminados, usar endDate
+      if (item.endDate) return new Date(item.endDate)
+      // Fallback a startDate
+      if (item.startDate) return new Date(item.startDate)
+      return new Date('1900-01-01')
+    }
+
+    const dateA = getDateForSort(a)
+    const dateB = getDateForSort(b)
+
+    // Si ambos son trabajos actuales, ordenar por startDate (más reciente primero)
+    if (a.current && b.current) {
+      const startA = a.startDate ? new Date(a.startDate) : new Date('1900-01-01')
+      const startB = b.startDate ? new Date(b.startDate) : new Date('1900-01-01')
+      return startB.getTime() - startA.getTime()
+    }
+
+    // Si solo uno es actual, va primero
+    if (a.current && !b.current) return -1
+    if (!a.current && b.current) return 1
+
+    // Para trabajos no actuales, ordenar por endDate (más reciente primero)
     return dateB.getTime() - dateA.getTime()
   })
 
   // Ordenar educación por fecha (más reciente primero)
   const sortedEducation = [...(data.education || [])].sort((a, b) => {
-    const dateA = new Date(a.endDate || '9999-12-31')
-    const dateB = new Date(b.endDate || '9999-12-31')
+    const getDateForSort = (item: any) => {
+      if (item.current) return new Date('9999-12-31')
+      if (item.endDate) return new Date(item.endDate)
+      if (item.startDate) return new Date(item.startDate)
+      return new Date('1900-01-01')
+    }
+
+    const dateA = getDateForSort(a)
+    const dateB = getDateForSort(b)
     return dateB.getTime() - dateA.getTime()
   })
+
+
 
   const formatDate = (dateString: string) => {
     if (!dateString) return ''
     const date = new Date(dateString)
-    return date.toLocaleDateString('es-ES', { 
-      month: 'long', 
-      year: 'numeric' 
+    // Verificar si la fecha es válida
+    if (isNaN(date.getTime())) return dateString
+
+    const locale = language === 'spanish' ? 'es-ES' : 'en-US'
+    return date.toLocaleDateString(locale, {
+      month: 'long',
+      year: 'numeric'
     }).replace(/^\w/, c => c.toUpperCase())
   }
 
-  const formatDateRange = (startDate: string, endDate: string) => {
+  const formatDateRange = (startDate: string, endDate: string, current?: boolean) => {
     const start = formatDate(startDate)
-    const end = endDate ? formatDate(endDate) : 'Presente'
+    const end = current ? t.common.present : (endDate ? formatDate(endDate) : t.common.present)
     return `${start} – ${end}`
   }
 
@@ -113,7 +169,7 @@ export const HarvardTemplate: React.FC<HarvardTemplateProps> = ({ data, language
                 </div>
                 <div className="text-left md:text-right text-sm md:flex-shrink-0" style={{ fontSize: 'clamp(9pt, 2.5vw, 10pt)' }}>
                   <p className="font-medium">{job.location}</p>
-                  <p className="italic">{formatDateRange(job.startDate, job.endDate)}</p>
+                  <p className="italic">{formatDateRange(job.startDate, job.endDate, job.current)}</p>
                 </div>
               </div>
               
@@ -188,7 +244,7 @@ export const HarvardTemplate: React.FC<HarvardTemplateProps> = ({ data, language
             ).map(([category, categorySkills]) => (
               <div key={category}>
                 <h3 className="font-bold mb-1" style={{ fontSize: 'clamp(10pt, 2.8vw, 11pt)' }}>
-                  {category}
+                  {translateSkillCategory(category)}
                 </h3>
                 <ul className="list-disc ml-4 md:ml-6 space-y-1" style={{ fontSize: 'clamp(9pt, 2.5vw, 10pt)' }}>
                   {categorySkills.map((skill, index) => (
@@ -225,7 +281,7 @@ export const HarvardTemplate: React.FC<HarvardTemplateProps> = ({ data, language
       {data.projects && data.projects.length > 0 && (
         <div className="mb-3 md:mb-4">
           <h2 className="text-base md:text-lg font-bold mb-2 md:mb-3 uppercase tracking-wide" style={{ fontSize: 'clamp(11pt, 3vw, 12pt)' }}>
-            PROYECTOS
+            {t.sections.projects.toUpperCase()}
           </h2>
           <hr className="border-black mb-2 md:mb-3" />
 
@@ -244,7 +300,7 @@ export const HarvardTemplate: React.FC<HarvardTemplateProps> = ({ data, language
                 </div>
                 <div className="text-left md:text-right text-sm md:flex-shrink-0" style={{ fontSize: 'clamp(9pt, 2.5vw, 10pt)' }}>
                   <p className="italic">
-                    {formatDateRange(project.startDate, project.endDate || '')}
+                    {project.startDate} - {project.endDate || t.common.present}
                   </p>
                 </div>
               </div>

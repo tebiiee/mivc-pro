@@ -1,14 +1,16 @@
 'use client'
 
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
-import { CVData } from '@/types/cv'
+import { CVData, LanguageCode } from '@/types/cv'
 import { CVTemplate } from '@/types/templates'
 import { HarvardPDF } from '@/components/templates/HarvardPDF'
 import { ProfessionalPDF } from '@/components/templates/ProfessionalPDF'
+import { ModernPDF } from '@/components/templates/ModernPDF'
 
 interface CVPDFProps {
   data: CVData
   template: CVTemplate
+  language?: LanguageCode
 }
 
 // Registrar fuentes (opcional, para mejor tipografía)
@@ -17,21 +19,38 @@ interface CVPDFProps {
 //   src: 'https://fonts.gstatic.com/s/opensans/v17/mem8YaGs126MiZpBA-UFVZ0e.ttf'
 // })
 
-export function CVPDF({ data, template }: CVPDFProps) {
+export function CVPDF({ data, template, language = 'spanish' }: CVPDFProps) {
   // Si es plantilla Harvard, usar el componente específico
   if (template.layout === 'harvard') {
-    return <HarvardPDF data={data} template={template} />
+    return <HarvardPDF data={data} template={template} language={language} />
   }
 
   // Si es plantilla Professional, usar el componente específico
   if (template.layout === 'professional') {
-    return <ProfessionalPDF data={data} template={template} />
+    return <ProfessionalPDF data={data} template={template} language={language} />
+  }
+
+  // Si es plantilla Modern, usar el componente específico
+  if (template.layout === 'modern') {
+    return <ModernPDF data={data} template={template} language={language} />
   }
 
   const { personalInfo, experience, education, skills, languages, projects } = data
 
-  // Ordenar experiencia y educación por fecha (más reciente primero)
+  // Ordenar experiencia por fecha (más reciente primero)
   const sortedExperience = [...experience].sort((a, b) => {
+    // Si ambos son trabajos actuales, ordenar por startDate (más reciente primero)
+    if (a.current && b.current) {
+      const startA = a.startDate ? new Date(a.startDate) : new Date('1900-01-01')
+      const startB = b.startDate ? new Date(b.startDate) : new Date('1900-01-01')
+      return startB.getTime() - startA.getTime()
+    }
+
+    // Si solo uno es actual, va primero
+    if (a.current && !b.current) return -1
+    if (!a.current && b.current) return 1
+
+    // Para trabajos no actuales, ordenar por endDate (más reciente primero)
     const dateA = new Date(a.endDate || '9999-12-31')
     const dateB = new Date(b.endDate || '9999-12-31')
     return dateB.getTime() - dateA.getTime()

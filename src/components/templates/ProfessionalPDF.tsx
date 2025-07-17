@@ -1,25 +1,72 @@
 import React from 'react'
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
-import { CVData } from '@/types/cv'
+import { CVData, LanguageCode } from '@/types/cv'
 import { CVTemplate } from '@/types/templates'
+import { getTranslations } from '@/lib/translations'
 
 interface ProfessionalPDFProps {
   data: CVData
   template: CVTemplate
+  language?: LanguageCode
 }
 
-export const ProfessionalPDF: React.FC<ProfessionalPDFProps> = ({ data, template }) => {
+export const ProfessionalPDF: React.FC<ProfessionalPDFProps> = ({ data, template, language = 'spanish' }) => {
+  const t = getTranslations(language)
+
+  // Función para traducir categorías de habilidades
+  const translateSkillCategory = (category: string): string => {
+    const categoryMap: Record<string, keyof typeof t.skillCategories> = {
+      'Habilidades Técnicas': 'technical',
+      'Technical Skills': 'technical',
+      'Habilidades Blandas': 'soft',
+      'Soft Skills': 'soft',
+      'Herramientas': 'tools',
+      'Tools': 'tools',
+      'Idiomas': 'languages',
+      'Languages': 'languages'
+    }
+
+    const key = categoryMap[category]
+    return key ? t.skillCategories[key] : category
+  }
+  // Función helper para ordenamiento
+  const getDateForSort = (item: any) => {
+    if (item.current) return new Date('9999-12-31')
+    if (item.endDate) return new Date(item.endDate)
+    if (item.startDate) return new Date(item.startDate)
+    return new Date('1900-01-01')
+  }
+
   // Ordenar experiencia laboral por fecha (más reciente primero)
   const sortedWorkExperience = [...(data.experience || [])].sort((a, b) => {
-    const dateA = new Date(a.endDate || '9999-12-31')
-    const dateB = new Date(b.endDate || '9999-12-31')
+    // Si ambos son trabajos actuales, ordenar por startDate (más reciente primero)
+    if (a.current && b.current) {
+      const startA = a.startDate ? new Date(a.startDate) : new Date('1900-01-01')
+      const startB = b.startDate ? new Date(b.startDate) : new Date('1900-01-01')
+      return startB.getTime() - startA.getTime()
+    }
+
+    // Si solo uno es actual, va primero
+    if (a.current && !b.current) return -1
+    if (!a.current && b.current) return 1
+
+    // Para trabajos no actuales, ordenar por endDate (más reciente primero)
+    const dateA = getDateForSort(a)
+    const dateB = getDateForSort(b)
     return dateB.getTime() - dateA.getTime()
   })
 
   // Ordenar educación por fecha (más reciente primero)
   const sortedEducation = [...(data.education || [])].sort((a, b) => {
-    const dateA = new Date(a.endDate || '9999-12-31')
-    const dateB = new Date(b.endDate || '9999-12-31')
+    const dateA = getDateForSort(a)
+    const dateB = getDateForSort(b)
+    return dateB.getTime() - dateA.getTime()
+  })
+
+  // Ordenar proyectos por fecha (más reciente primero)
+  const sortedProjects = [...(data.projects || [])].sort((a, b) => {
+    const dateA = getDateForSort(a)
+    const dateB = getDateForSort(b)
     return dateB.getTime() - dateA.getTime()
   })
 
@@ -27,15 +74,19 @@ export const ProfessionalPDF: React.FC<ProfessionalPDFProps> = ({ data, template
   const formatDate = (dateString: string) => {
     if (!dateString) return ''
     const date = new Date(dateString)
-    return date.toLocaleDateString('es-ES', { 
-      year: 'numeric', 
-      month: 'long' 
+    // Verificar si la fecha es válida
+    if (isNaN(date.getTime())) return dateString
+
+    const locale = language === 'spanish' ? 'es-ES' : 'en-US'
+    return date.toLocaleDateString(locale, {
+      year: 'numeric',
+      month: 'long'
     })
   }
 
-  const formatDateRange = (startDate: string, endDate: string) => {
+  const formatDateRange = (startDate: string, endDate: string, current?: boolean) => {
     const start = formatDate(startDate)
-    const end = endDate ? formatDate(endDate) : 'Presente'
+    const end = current ? t.common.present : (endDate ? formatDate(endDate) : t.common.present)
     return `${start} - ${end}`
   }
 
@@ -180,7 +231,7 @@ export const ProfessionalPDF: React.FC<ProfessionalPDFProps> = ({ data, template
           {/* Perfil Profesional */}
           {data.summary && (
             <View style={styles.sectionContent}>
-              <Text style={styles.sectionTitle}>Perfil Profesional</Text>
+              <Text style={styles.sectionTitle}>{t.sections.professionalProfile}</Text>
               <Text style={styles.profileText}>{data.summary}</Text>
             </View>
           )}
@@ -188,7 +239,7 @@ export const ProfessionalPDF: React.FC<ProfessionalPDFProps> = ({ data, template
           {/* Experiencia Laboral */}
           {sortedWorkExperience.length > 0 && (
             <View style={styles.sectionContent}>
-              <Text style={styles.sectionTitle}>Experiencia Laboral</Text>
+              <Text style={styles.sectionTitle}>{t.sections.experience}</Text>
               {sortedWorkExperience.map((exp, index) => (
                 <View key={index} style={{ marginBottom: 10 }}>
                   <Text style={styles.jobTitle}>
@@ -198,7 +249,7 @@ export const ProfessionalPDF: React.FC<ProfessionalPDFProps> = ({ data, template
                     <Text style={styles.jobLocation}>{exp.location}</Text>
                   )}
                   <Text style={styles.jobDate}>
-                    {formatDateRange(exp.startDate, exp.endDate)}
+                    {formatDateRange(exp.startDate, exp.endDate, exp.current)}
                   </Text>
                   {exp.description && (
                     <Text style={[styles.bulletPoint, { marginBottom: 4 }]}>
@@ -218,7 +269,7 @@ export const ProfessionalPDF: React.FC<ProfessionalPDFProps> = ({ data, template
           {/* Educación */}
           {sortedEducation.length > 0 && (
             <View style={styles.sectionContent}>
-              <Text style={styles.sectionTitle}>Educación</Text>
+              <Text style={styles.sectionTitle}>{t.sections.education}</Text>
               {sortedEducation.map((edu, index) => (
                 <View key={index} style={{ marginBottom: 8 }}>
                   <Text style={styles.jobTitle}>
@@ -228,7 +279,7 @@ export const ProfessionalPDF: React.FC<ProfessionalPDFProps> = ({ data, template
                     <Text style={styles.jobLocation}>{edu.location}</Text>
                   )}
                   <Text style={styles.jobDate}>
-                    {formatDateRange(edu.startDate, edu.endDate)}
+                    {formatDateRange(edu.startDate, edu.endDate, edu.current)}
                   </Text>
                   {edu.details && (
                     <Text style={styles.bulletPoint}>{edu.details}</Text>
@@ -243,7 +294,7 @@ export const ProfessionalPDF: React.FC<ProfessionalPDFProps> = ({ data, template
         <View style={styles.rightColumn}>
           {/* Contacto */}
           <View style={styles.sectionContent}>
-            <Text style={styles.sectionTitleWhite}>Contacto</Text>
+            <Text style={styles.sectionTitleWhite}>{language === 'spanish' ? 'Contacto' : 'Contact'}</Text>
             {data.personalInfo.location && (
               <View style={styles.contactItem}>
                 <Text style={styles.contactText}>{data.personalInfo.location}</Text>
@@ -269,7 +320,7 @@ export const ProfessionalPDF: React.FC<ProfessionalPDFProps> = ({ data, template
           {/* Habilidades */}
           {data.skills && data.skills.length > 0 && (
             <View style={styles.sectionContent}>
-              <Text style={styles.sectionTitleWhite}>Habilidades</Text>
+              <Text style={styles.sectionTitleWhite}>{t.sections.skills}</Text>
               {data.skills.slice(0, 8).map((skill, index) => (
                 <View key={index} style={styles.skillItem}>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -296,11 +347,37 @@ export const ProfessionalPDF: React.FC<ProfessionalPDFProps> = ({ data, template
           {/* Idiomas */}
           {data.languages && data.languages.length > 0 && (
             <View style={styles.sectionContent}>
-              <Text style={styles.sectionTitleWhite}>Idiomas</Text>
+              <Text style={styles.sectionTitleWhite}>{t.sections.languages}</Text>
               {data.languages.map((language, index) => (
                 <View key={index} style={styles.languageItem}>
                   <Text style={styles.languageName}>{language.name}</Text>
                   <Text style={styles.languageLevel}>{language.level}</Text>
+                </View>
+              ))}
+            </View>
+          )}
+
+          {/* Proyectos */}
+          {sortedProjects.length > 0 && (
+            <View style={styles.sectionContent}>
+              <Text style={styles.sectionTitleWhite}>{t.sections.projects}</Text>
+              {sortedProjects.slice(0, 3).map((project, index) => (
+                <View key={index} style={{ marginBottom: 8 }}>
+                  <Text style={styles.skillName}>{project.name}</Text>
+                  {project.url && (
+                    <Text style={[styles.skillLevel, { marginBottom: 2 }]}>{project.url}</Text>
+                  )}
+                  <Text style={[styles.skillLevel, { marginBottom: 3 }]}>
+                    {project.startDate} - {project.endDate || t.common.present}
+                  </Text>
+                  <Text style={[styles.contactText, { fontSize: 7, marginLeft: 0, marginBottom: 3 }]}>
+                    {project.description}
+                  </Text>
+                  {project.technologies && project.technologies.length > 0 && (
+                    <Text style={[styles.skillLevel, { fontSize: 6 }]}>
+                      {project.technologies.join(', ')}
+                    </Text>
+                  )}
                 </View>
               ))}
             </View>

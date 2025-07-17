@@ -1,41 +1,92 @@
 'use client'
 
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
-import { CVData } from '@/types/cv'
+import { CVData, LanguageCode } from '@/types/cv'
 import { CVTemplate } from '@/types/templates'
+import { getTranslations } from '@/lib/translations'
 
 interface HarvardPDFProps {
   data: CVData
   template: CVTemplate
+  language?: LanguageCode
 }
 
-export function HarvardPDF({ data }: HarvardPDFProps) {
+export function HarvardPDF({ data, language = 'spanish' }: HarvardPDFProps) {
+  const t = getTranslations(language)
+
+  // Función para traducir categorías de habilidades
+  const translateSkillCategory = (category: string): string => {
+    const categoryMap: Record<string, keyof typeof t.skillCategories> = {
+      'Habilidades Técnicas': 'technical',
+      'Technical Skills': 'technical',
+      'Habilidades Blandas': 'soft',
+      'Soft Skills': 'soft',
+      'Herramientas': 'tools',
+      'Tools': 'tools',
+      'Idiomas': 'languages',
+      'Languages': 'languages'
+    }
+
+    const key = categoryMap[category]
+    return key ? t.skillCategories[key] : category
+  }
+  // Función helper para ordenamiento
+  const getDateForSort = (item: any) => {
+    if (item.current) return new Date('9999-12-31')
+    if (item.endDate) return new Date(item.endDate)
+    if (item.startDate) return new Date(item.startDate)
+    return new Date('1900-01-01')
+  }
+
   // Ordenar experiencia laboral por fecha (más reciente primero)
   const sortedWorkExperience = [...(data.workExperience || data.experience || [])].sort((a, b) => {
-    const dateA = new Date(a.endDate || '9999-12-31')
-    const dateB = new Date(b.endDate || '9999-12-31')
+    // Si ambos son trabajos actuales, ordenar por startDate (más reciente primero)
+    if (a.current && b.current) {
+      const startA = a.startDate ? new Date(a.startDate) : new Date('1900-01-01')
+      const startB = b.startDate ? new Date(b.startDate) : new Date('1900-01-01')
+      return startB.getTime() - startA.getTime()
+    }
+
+    // Si solo uno es actual, va primero
+    if (a.current && !b.current) return -1
+    if (!a.current && b.current) return 1
+
+    // Para trabajos no actuales, ordenar por endDate (más reciente primero)
+    const dateA = getDateForSort(a)
+    const dateB = getDateForSort(b)
     return dateB.getTime() - dateA.getTime()
   })
 
   // Ordenar educación por fecha (más reciente primero)
   const sortedEducation = [...(data.education || [])].sort((a, b) => {
-    const dateA = new Date(a.endDate || '9999-12-31')
-    const dateB = new Date(b.endDate || '9999-12-31')
+    const dateA = getDateForSort(a)
+    const dateB = getDateForSort(b)
+    return dateB.getTime() - dateA.getTime()
+  })
+
+  // Ordenar proyectos por fecha (más reciente primero)
+  const sortedProjects = [...(data.projects || [])].sort((a, b) => {
+    const dateA = getDateForSort(a)
+    const dateB = getDateForSort(b)
     return dateB.getTime() - dateA.getTime()
   })
 
   const formatDate = (dateString: string) => {
     if (!dateString) return ''
     const date = new Date(dateString)
-    return date.toLocaleDateString('es-ES', { 
-      month: 'long', 
-      year: 'numeric' 
+    // Verificar si la fecha es válida
+    if (isNaN(date.getTime())) return dateString
+
+    const locale = language === 'spanish' ? 'es-ES' : 'en-US'
+    return date.toLocaleDateString(locale, {
+      month: 'long',
+      year: 'numeric'
     }).replace(/^\w/, c => c.toUpperCase())
   }
 
-  const formatDateRange = (startDate: string, endDate: string) => {
+  const formatDateRange = (startDate: string, endDate: string, current?: boolean) => {
     const start = formatDate(startDate)
-    const end = endDate ? formatDate(endDate) : 'Presente'
+    const end = current ? t.common.present : (endDate ? formatDate(endDate) : t.common.present)
     return `${start} – ${end}`
   }
 
@@ -194,7 +245,7 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
         {/* Experiencia Profesional */}
         {sortedWorkExperience.length > 0 && (
           <View>
-            <Text style={styles.sectionTitle}>EXPERIENCIA PROFESIONAL</Text>
+            <Text style={styles.sectionTitle}>{t.sections.experience.toUpperCase()}</Text>
             <View style={styles.sectionSeparator} />
             
             {sortedWorkExperience.map((job, index) => (
@@ -207,7 +258,7 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
                   <View style={styles.experienceRight}>
                     <Text style={styles.location}>{job.location}</Text>
                     <Text style={styles.dateRange}>
-                      {formatDateRange(job.startDate, job.endDate)}
+                      {formatDateRange(job.startDate, job.endDate, job.current)}
                     </Text>
                   </View>
                 </View>
@@ -234,7 +285,7 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
         {/* Educación */}
         {sortedEducation.length > 0 && (
           <View>
-            <Text style={styles.sectionTitle}>EDUCACIÓN</Text>
+            <Text style={styles.sectionTitle}>{t.sections.education.toUpperCase()}</Text>
             <View style={styles.sectionSeparator} />
             
             {sortedEducation.map((edu, index) => (
@@ -260,7 +311,7 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
         {/* Skills Adicionales */}
         {data.skills && data.skills.length > 0 && (
           <View style={styles.skillsSection}>
-            <Text style={styles.sectionTitle}>SKILLS ADICIONALES</Text>
+            <Text style={styles.sectionTitle}>{t.sections.skills.toUpperCase()}</Text>
             <View style={styles.sectionSeparator} />
 
             <View style={styles.skillsList}>
@@ -276,7 +327,7 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
         {/* Idiomas */}
         {data.languages && data.languages.length > 0 && (
           <View style={styles.skillsSection}>
-            <Text style={styles.sectionTitle}>IDIOMAS</Text>
+            <Text style={styles.sectionTitle}>{t.sections.languages.toUpperCase()}</Text>
             <View style={styles.sectionSeparator} />
 
             <View style={styles.skillsList}>
@@ -290,12 +341,12 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
         )}
 
         {/* Proyectos */}
-        {data.projects && data.projects.length > 0 && (
+        {sortedProjects.length > 0 && (
           <View style={styles.skillsSection}>
-            <Text style={styles.sectionTitle}>PROYECTOS</Text>
+            <Text style={styles.sectionTitle}>{t.sections.projects.toUpperCase()}</Text>
             <View style={styles.sectionSeparator} />
 
-            {data.projects.map((project, index) => (
+            {sortedProjects.map((project, index) => (
               <View key={index} style={styles.experienceItem}>
                 <View style={styles.experienceHeader}>
                   <View style={styles.experienceLeft}>
@@ -306,7 +357,7 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
                   </View>
                   <View style={styles.experienceRight}>
                     <Text style={styles.dateRange}>
-                      {formatDateRange(project.startDate, project.endDate || '')}
+                      {project.startDate} - {project.endDate || t.common.present}
                     </Text>
                   </View>
                 </View>
