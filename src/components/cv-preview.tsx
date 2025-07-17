@@ -1,7 +1,7 @@
 import { CVData, LanguageCode } from '@/types/cv'
 import { CVTemplate } from '@/types/templates'
 import { Button } from '@/components/ui/button'
-import { Download, Mail, Phone, MapPin, Globe, Linkedin, Palette, Home } from 'lucide-react'
+import { Download, Palette, Home } from 'lucide-react'
 import { HarvardTemplate } from '@/components/templates/HarvardTemplate'
 import { ProfessionalTemplate } from '@/components/templates/ProfessionalTemplate'
 import { ModernTemplate } from '@/components/templates/ModernTemplate'
@@ -35,33 +35,7 @@ export function CVPreview({
   onLanguageChange,
   isBilingual = false
 }: CVPreviewProps) {
-  const { personalInfo, experience, education, skills, languages, projects } = data
   const t = getTranslations(language)
-
-  // Ordenar experiencia por fecha (más reciente primero)
-  const sortedExperience = [...experience].sort((a, b) => {
-    // Si ambos son trabajos actuales, ordenar por startDate (más reciente primero)
-    if (a.current && b.current) {
-      const startA = a.startDate ? new Date(a.startDate) : new Date('1900-01-01')
-      const startB = b.startDate ? new Date(b.startDate) : new Date('1900-01-01')
-      return startB.getTime() - startA.getTime()
-    }
-
-    // Si solo uno es actual, va primero
-    if (a.current && !b.current) return -1
-    if (!a.current && b.current) return 1
-
-    // Para trabajos no actuales, ordenar por endDate (más reciente primero)
-    const dateA = new Date(a.endDate || '9999-12-31')
-    const dateB = new Date(b.endDate || '9999-12-31')
-    return dateB.getTime() - dateA.getTime()
-  })
-
-  const sortedEducation = [...education].sort((a, b) => {
-    const dateA = new Date(a.endDate || '9999-12-31')
-    const dateB = new Date(b.endDate || '9999-12-31')
-    return dateB.getTime() - dateA.getTime()
-  })
 
   return (
     <div className="w-full max-w-7xl mx-auto space-y-8 px-4">

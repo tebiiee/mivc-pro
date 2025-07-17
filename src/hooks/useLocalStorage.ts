@@ -54,6 +54,7 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
   // Inicializar el estado con el valor del localStorage al montar el componente
   useEffect(() => {
     setStoredValue(getValue())
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return [storedValue, setValue, removeValue] as const

@@ -21,9 +21,7 @@ export const ModernTemplate: React.FC<ModernTemplateProps> = ({ data, template, 
       'Habilidades Blandas': 'soft',
       'Soft Skills': 'soft',
       'Herramientas': 'tools',
-      'Tools': 'tools',
-      'Idiomas': 'languages',
-      'Languages': 'languages'
+      'Tools': 'tools'
     }
 
     const key = categoryMap[category]
@@ -32,7 +30,7 @@ export const ModernTemplate: React.FC<ModernTemplateProps> = ({ data, template, 
   const { personalInfo, experience, education, skills, languages, projects } = data
 
   // Función helper para ordenamiento
-  const getDateForSort = (item: any) => {
+  const getDateForSort = (item: { current?: boolean; endDate?: string; startDate?: string }) => {
     if (item.current) return new Date('9999-12-31')
     if (item.endDate) return new Date(item.endDate)
     if (item.startDate) return new Date(item.startDate)

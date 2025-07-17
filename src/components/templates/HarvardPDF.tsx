@@ -14,24 +14,9 @@ interface HarvardPDFProps {
 export function HarvardPDF({ data, language = 'spanish' }: HarvardPDFProps) {
   const t = getTranslations(language)
 
-  // Función para traducir categorías de habilidades
-  const translateSkillCategory = (category: string): string => {
-    const categoryMap: Record<string, keyof typeof t.skillCategories> = {
-      'Habilidades Técnicas': 'technical',
-      'Technical Skills': 'technical',
-      'Habilidades Blandas': 'soft',
-      'Soft Skills': 'soft',
-      'Herramientas': 'tools',
-      'Tools': 'tools',
-      'Idiomas': 'languages',
-      'Languages': 'languages'
-    }
 
-    const key = categoryMap[category]
-    return key ? t.skillCategories[key] : category
-  }
   // Función helper para ordenamiento
-  const getDateForSort = (item: any) => {
+  const getDateForSort = (item: { current?: boolean; endDate?: string; startDate?: string }) => {
     if (item.current) return new Date('9999-12-31')
     if (item.endDate) return new Date(item.endDate)
     if (item.startDate) return new Date(item.startDate)

@@ -21,9 +21,7 @@ export const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ data
       'Habilidades Blandas': 'soft',
       'Soft Skills': 'soft',
       'Herramientas': 'tools',
-      'Tools': 'tools',
-      'Idiomas': 'languages',
-      'Languages': 'languages'
+      'Tools': 'tools'
     }
 
     const key = categoryMap[category]
@@ -32,7 +30,7 @@ export const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ data
   // Ordenar experiencia laboral por fecha (más reciente primero)
   const sortedWorkExperience = [...(data.experience || [])].sort((a, b) => {
     // Función para obtener la fecha más relevante para ordenamiento
-    const getDateForSort = (item: any) => {
+    const getDateForSort = (item: { current?: boolean; endDate?: string; startDate?: string }) => {
       // Para trabajos actuales, usar startDate para ordenar correctamente
       if (item.current) {
         return item.startDate ? new Date(item.startDate) : new Date('1900-01-01')
@@ -64,7 +62,7 @@ export const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ data
 
   // Ordenar educación por fecha (más reciente primero)
   const sortedEducation = [...(data.education || [])].sort((a, b) => {
-    const getDateForSort = (item: any) => {
+    const getDateForSort = (item: { current?: boolean; endDate?: string; startDate?: string }) => {
       if (item.current) return new Date('9999-12-31')
       if (item.endDate) return new Date(item.endDate)
       if (item.startDate) return new Date(item.startDate)
