@@ -11,8 +11,10 @@ import { CVPreview } from '@/components/cv-preview'
 import { TemplateSelector } from '@/components/template-selector'
 import { ProcessingStatus } from '@/components/processing-status'
 import { DecorativeFlowers } from '@/components/ui/decorative-flowers'
-import { generateAndDownloadPDF } from '@/lib/pdf-utils'
+import { generateAndDownloadPDF, generateAndDownloadBilingualPDF } from '@/lib/pdf-utils'
+import { convertAIDataToCVData } from '@/lib/cv-converter'
 import { useCVData } from '@/hooks/useCVData'
+import { useBilingual } from '@/contexts/BilingualContext'
 
 export default function Home() {
   const [description, setDescription] = useState('')
@@ -21,19 +23,42 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null)
   const [selectedTemplate, setSelectedTemplate] = useState<CVTemplate>(CV_TEMPLATES[0])
   const [showTemplateSelector, setShowTemplateSelector] = useState(false)
+  const [hasInitialLoad, setHasInitialLoad] = useState(false)
 
   // Hook para manejar datos del CV en localStorage
   const { saveCVData, getCVData, hasDataForDescription, clearSession, hasActiveSession } = useCVData()
 
+  // Contexto bilingüe
+  const {
+    currentLanguage,
+    setCurrentLanguage,
+    bilingualData,
+    setBilingualData,
+    getCurrentCV,
+    hasData
+  } = useBilingual()
+
   // Cargar datos existentes al iniciar la aplicación
   useEffect(() => {
+    // Solo ejecutar una vez al cargar la página
+    if (hasInitialLoad) return
+
+    // Priorizar datos bilingües si existen
+    if (hasData && bilingualData) {
+      setShowTemplateSelector(true)
+      setHasInitialLoad(true)
+      return
+    }
+
+    // Fallback a datos legacy
     const existingData = getCVData()
     if (existingData) {
       setDescription(existingData.description)
       setCvData(existingData.cvData)
       setShowTemplateSelector(true)
+      setHasInitialLoad(true)
     }
-  }, [])
+  }, [hasData, bilingualData, getCVData, hasInitialLoad])
   const [processingStage, setProcessingStage] = useState<'analyzing' | 'structuring' | 'formatting' | 'complete'>('analyzing')
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -69,13 +94,19 @@ export default function Home() {
 
       const result: AIProcessingResponse = await response.json()
 
-      if (result.success && result.data) {
+      if (result.success) {
         setProcessingStage('complete')
         setTimeout(() => {
-          setCvData(result.data!)
-          // Guardar en localStorage
-          saveCVData(description.trim(), result.data!)
-          setShowTemplateSelector(true)
+          // Priorizar datos bilingües si están disponibles
+          if (result.bilingualData) {
+            setBilingualData(result.bilingualData)
+            setShowTemplateSelector(true)
+          } else if (result.data) {
+            // Fallback a datos legacy
+            setCvData(result.data)
+            saveCVData(description.trim(), result.data)
+            setShowTemplateSelector(true)
+          }
         }, 500)
       } else {
         setError(result.error || 'Error procesando la información')
@@ -90,9 +121,38 @@ export default function Home() {
   }
 
   const handleDownloadPDF = async () => {
-    if (!cvData) return
+    let success = false
 
-    const success = await generateAndDownloadPDF(cvData, selectedTemplate)
+    // Si hay datos bilingües, descargar ambas versiones
+    if (hasData && bilingualData) {
+      success = await generateAndDownloadBilingualPDF(bilingualData, selectedTemplate)
+      if (success) {
+        // Mostrar mensaje específico para descarga dual
+        setTimeout(() => {
+          alert('CVs descargados exitosamente en español e inglés. Tus datos han sido eliminados por privacidad.')
+          // Limpiar y redirigir al inicio
+          clearSession()
+          setBilingualData(null)
+          handleHome()
+        }, 1000)
+      }
+    } else {
+      // Fallback a descarga simple para datos legacy
+      const dataToUse = cvData
+      if (!dataToUse) return
+
+      success = await generateAndDownloadPDF(dataToUse, selectedTemplate)
+      if (success) {
+        // Mostrar mensaje para descarga simple
+        setTimeout(() => {
+          alert('CV descargado exitosamente. Tus datos han sido eliminados por privacidad.')
+          // Limpiar y redirigir al inicio
+          clearSession()
+          handleHome()
+        }, 1000)
+      }
+    }
+
     if (!success) {
       alert('Error al generar el PDF. Por favor, intenta nuevamente.')
     }
@@ -100,6 +160,7 @@ export default function Home() {
 
   const handleEditCV = () => {
     setCvData(null)
+    setBilingualData(null)
     setError(null)
     setShowTemplateSelector(false)
     // Limpiar la sesión para forzar nueva generación cuando se edite
@@ -120,9 +181,11 @@ export default function Home() {
 
   const handleHome = () => {
     setCvData(null)
+    setBilingualData(null)
     setError(null)
     setShowTemplateSelector(false)
     setDescription('')
+    setHasInitialLoad(false)
     // Limpiar la sesión de localStorage
     clearSession()
   }
@@ -167,21 +230,29 @@ export default function Home() {
       <main className="container mx-auto px-4 pb-16 relative z-10">
         {isProcessing ? (
           <ProcessingStatus stage={processingStage} />
-        ) : cvData && showTemplateSelector ? (
+        ) : showTemplateSelector && ((hasData && getCurrentCV()) || cvData) ? (
           <TemplateSelector
             selectedTemplate={selectedTemplate}
             onTemplateSelect={handleTemplateSelect}
             onContinue={handleContinueWithTemplate}
           />
-        ) : cvData ? (
-          <CVPreview
-            data={cvData}
-            template={selectedTemplate}
-            onDownload={handleDownloadPDF}
-            onEdit={handleEditCV}
-            onChangeTemplate={handleChangeTemplate}
-            onHome={handleHome}
-          />
+        ) : (hasData && getCurrentCV()) || cvData ? (
+          <div className="space-y-6">
+            {/* Language Toggle integrado - Solo mostrar si hay datos bilingües */}
+            <CVPreview
+              data={getCurrentCV() ? convertAIDataToCVData(getCurrentCV()!) : cvData!}
+              template={selectedTemplate}
+              language={currentLanguage}
+              onDownload={handleDownloadPDF}
+              onEdit={handleEditCV}
+              onChangeTemplate={handleChangeTemplate}
+              onHome={handleHome}
+              showLanguageToggle={!!(hasData && bilingualData)}
+              currentLanguage={currentLanguage}
+              onLanguageChange={setCurrentLanguage}
+              isBilingual={!!(hasData && bilingualData)}
+            />
+          </div>
         ) : (
           <div className="max-w-5xl mx-auto">
           {/* Features */}

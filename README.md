@@ -5,17 +5,20 @@
 [![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 
-Una aplicación web moderna en español que utiliza inteligencia artificial avanzada para crear currículums vitae (CV) profesionales de alta calidad a partir de descripciones en lenguaje natural.
+Una aplicación web moderna **bilingüe** que utiliza inteligencia artificial avanzada para crear currículums vitae (CV) profesionales simultáneamente en **español e inglés** a partir de descripciones en lenguaje natural.
 
 ## ✨ Características Principales
 
-- **🤖 IA Avanzada**: Powered by Google Gemini 2.5 Flash Lite con prompt optimizado para ATS
+- **🌍 Generación Bilingüe**: CVs creados simultáneamente en español e inglés con una sola descripción
+- **📄 Descarga Dual**: Descarga automática de 2 PDFs (ES + EN) con un solo clic
+- **🔄 Switch de Idiomas**: Cambio instantáneo entre versiones sin regenerar datos
+- **🎨 3 Plantillas Profesionales**: Moderna, Harvard y Professional optimizadas para ATS
+- **📐 Vista Previa Optimizada**: Aprovecha mejor el ancho de pantalla en todos los dispositivos
+- **🤖 IA Avanzada**: Powered by Google Gemini 2.5 Flash Lite con prompt bilingüe optimizado
 - **💾 Persistencia Inteligente**: Sistema de localStorage que evita regeneraciones innecesarias
-- **🎨 Diseño Moderno**: Interfaz basada en Clay Design System con elementos decorativos
-- **📱 100% Responsive**: Optimizado para desktop, tablet y móvil con UX específica
-- **📄 PDF Optimizado**: Generación de CVs en una sola página con fuentes optimizadas
-- **🔒 Privacidad Total**: Datos temporales (24h) sin almacenamiento permanente
-- **⚡ Cambio Instantáneo**: Switch entre plantillas sin pérdida de datos
+- **🎨 Diseño Glassmorphism**: Panel de control elegante con elementos decorativos modernos
+- **📱 100% Responsive**: Escalado inteligente para móvil, tablet y desktop
+- **🔒 Privacidad Total**: Datos eliminados automáticamente tras descarga
 - **🆓 Completamente Gratuito**: Sin registro, sin pagos, sin límites
 
 ## 🛠️ Stack Tecnológico
@@ -27,9 +30,10 @@ Una aplicación web moderna en español que utiliza inteligencia artificial avan
 - **Tailwind CSS** con configuración personalizada
 
 ### IA y APIs
-- **Google Gemini 2.5 Flash Lite Preview** (modelo optimizado)
+- **Google Gemini 2.5 Flash Lite Preview** (modelo optimizado para generación bilingüe)
 - **OpenRouter API** para acceso a múltiples modelos
-- **Prompt Engineering** de élite optimizado para ATS
+- **Prompt Engineering Bilingüe** de élite optimizado para ATS
+- **Generación Simultánea** de CVs en español e inglés
 
 ### UI/UX
 - **Inter Font** (Google Fonts) para tipografía moderna
@@ -38,9 +42,10 @@ Una aplicación web moderna en español que utiliza inteligencia artificial avan
 - **Elementos decorativos** SVG personalizados
 
 ### Funcionalidades
-- **@react-pdf/renderer** para generación de PDFs
-- **localStorage** con hooks personalizados
-- **Responsive design** avanzado
+- **@react-pdf/renderer** para generación dual de PDFs (ES + EN)
+- **Sistema de traducciones** completo para interfaz bilingüe
+- **localStorage** con hooks personalizados para datos bilingües
+- **Responsive design** avanzado con escalado inteligente
 
 ## 📋 Requisitos previos
 
@@ -94,6 +99,26 @@ Una aplicación web moderna en español que utiliza inteligencia artificial avan
 2. Crea una cuenta gratuita
 3. Genera una clave API en [OpenRouter Keys](https://openrouter.ai/keys)
 4. Agrega la clave a tu archivo `.env.local`
+
+## 🌍 Características Bilingües
+
+### Generación Simultánea
+- **Una sola descripción** → **Dos CVs completos** (español e inglés)
+- **Adaptación cultural**, no traducción literal
+- **Optimización ATS** para ambos idiomas
+- **Consistencia** en estructura y formato
+
+### Switch de Idiomas
+- **Toggle instantáneo** entre versiones sin regenerar
+- **Persistencia** de preferencia en localStorage
+- **Sincronización** con cambios de plantilla
+- **Interfaz completamente traducida**
+
+### Descarga Dual
+- **Un solo clic** → **Dos PDFs** automáticamente
+- **Nomenclatura clara**: `CV_Nombre_ES.pdf` y `CV_Nombre_EN.pdf`
+- **Pausa inteligente** entre descargas
+- **Feedback visual** en botones
 
 ## 📁 Estructura del proyecto
 

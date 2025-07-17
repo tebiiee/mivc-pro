@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { BilingualProvider } from "../contexts/BilingualContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -31,9 +32,11 @@ export default function RootLayout({
       <body
         className={`${inter.variable} font-sans antialiased min-h-screen bg-background text-foreground`}
       >
-        <main className="min-h-screen">
-          {children}
-        </main>
+        <BilingualProvider>
+          <main className="min-h-screen">
+            {children}
+          </main>
+        </BilingualProvider>
       </body>
     </html>
   );

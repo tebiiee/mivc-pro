@@ -10,27 +10,27 @@ export interface CVTemplate {
     text: string
     background: string
   }
-  layout: 'modern' | 'harvard'
+  layout: 'modern' | 'harvard' | 'professional'
 }
 
 export const CV_TEMPLATES: CVTemplate[] = [
   {
-    id: 'modern-blue',
-    name: 'Moderna',
-    description: 'Diseño moderno con acentos azules, ideal para profesionales de tecnología',
-    preview: '/templates/modern-blue.png',
+    id: 'professional',
+    name: 'Profesional',
+    description: 'Diseño profesional de dos columnas con sidebar azul, ideal para cualquier sector',
+    preview: '/templates/professional.png',
     colors: {
-      primary: '#2563eb',
-      secondary: '#1e40af',
-      accent: '#3b82f6',
+      primary: '#1e3a8a',
+      secondary: '#3b82f6',
+      accent: '#60a5fa',
       text: '#1f2937',
       background: '#ffffff'
     },
-    layout: 'modern'
+    layout: 'professional'
   },
   {
     id: 'classic-gray',
-    name: 'Moderna Gris',
+    name: 'Moderna',
     description: 'Diseño moderno en tonos grises, elegante y profesional',
     preview: '/templates/classic-gray.png',
     colors: {

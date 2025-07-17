@@ -6,16 +6,17 @@
 
 ### 🎯 Características Principales
 
-- **100% Gratuito y Privado**: No requiere registro, no almacena datos permanentemente
-- **Procesamiento con IA**: Convierte texto natural en CV estructurado usando Gemini 2.5 Flash Lite
-- **Múltiples Plantillas**: 3 plantillas profesionales optimizadas para diferentes sectores
-- **Generación PDF**: Descarga instantánea en formato PDF de una sola página
-- **Interfaz en Español**: Completamente localizada con diseño moderno
-- **Responsive Design**: Optimizado para desktop, tablet y móvil
-- **Optimización ATS**: CVs optimizados para sistemas de seguimiento
-- **Persistencia Inteligente**: Datos guardados localmente para cambios de plantilla sin pérdida
-- **Identidad Visual Moderna**: Diseño basado en Clay Design System con elementos decorativos
-- **UX Optimizada**: Cambio instantáneo de plantillas y navegación fluida
+- **🌍 Generación Bilingüe**: CVs generados simultáneamente en español e inglés con IA
+- **📄 Descarga Dual**: Descarga automática de 2 PDFs (ES + EN) con un solo clic
+- **🎨 3 Plantillas Profesionales**: Moderna, Harvard y Professional optimizadas para ATS
+- **🔄 Switch de Idiomas**: Cambio instantáneo entre versiones sin regenerar
+- **📱 Vista Previa Optimizada**: Aprovecha mejor el ancho de pantalla en todos los dispositivos
+- **🎯 100% Gratuito y Privado**: No requiere registro, datos eliminados tras descarga
+- **⚡ Procesamiento con IA**: Gemini 2.5 Flash Lite Preview para máxima velocidad
+- **💾 Persistencia Inteligente**: localStorage para cambios de plantilla sin pérdida
+- **🎨 Identidad Visual Moderna**: Diseño glassmorphism con elementos decorativos
+- **📐 Responsive Avanzado**: Escalado inteligente para móvil, tablet y desktop
+- **🔧 UX Optimizada**: Navegación fluida con panel de control organizado
 
 ## 🛠️ Stack Tecnológico
 
@@ -34,13 +35,19 @@
 
 ### Generación PDF
 - **@react-pdf/renderer**: Generación de PDFs en React con optimización para una página
-- **Helvetica**: Fuente estándar para máxima compatibilidad
+- **Descarga Dual**: Generación simultánea de PDFs en español e inglés
+- **Nomenclatura Inteligente**: `CV_NombreCompleto_ES.pdf` y `CV_NombreCompleto_EN.pdf`
+- **Helvetica**: Fuente estándar para máxima compatibilidad ATS
 - **Sanitización de nombres**: Manejo seguro de caracteres especiales
+- **Pausa entre descargas**: 500ms para evitar conflictos del navegador
 
 ### Persistencia y Estado
 - **localStorage**: Almacenamiento local inteligente con expiración
+- **Datos Bilingües**: Persistencia de CVs en español e inglés simultáneamente
 - **Custom Hooks**: useLocalStorage y useCVData para gestión de estado
 - **Sesiones Temporales**: Datos persistentes por 24 horas
+- **Switch de Idiomas**: Cambio instantáneo sin regenerar datos
+- **Limpieza Automática**: Datos eliminados tras descarga por privacidad
 
 ### Herramientas de Desarrollo
 - **ESLint**: Linting de código
@@ -86,23 +93,54 @@ src/
     └── style-guide.json   # Guía de estilo Clay Design System
 ```
 
+## 🌍 Sistema Bilingüe Avanzado
+
+### Generación Simultánea
+La aplicación genera automáticamente CVs en **español e inglés** con una sola descripción:
+
+- **Procesamiento Único**: Una sola llamada a la IA genera ambas versiones
+- **Traducción Inteligente**: No es traducción literal, sino adaptación cultural
+- **Consistencia**: Misma estructura y formato en ambos idiomas
+- **Optimización ATS**: Ambas versiones optimizadas para sistemas de seguimiento
+
+### Switch de Idiomas
+- **Cambio Instantáneo**: Toggle entre español e inglés sin regenerar
+- **Persistencia**: Preferencia de idioma guardada en localStorage
+- **Sincronización**: Cambios de plantilla mantienen el idioma seleccionado
+- **UX Fluida**: Transición suave entre versiones
+
+### Descarga Dual
+- **Un Solo Clic**: Descarga automática de ambos PDFs
+- **Nomenclatura Clara**: `CV_Nombre_ES.pdf` y `CV_Nombre_EN.pdf`
+- **Pausa Inteligente**: 500ms entre descargas para evitar conflictos
+- **Feedback Visual**: Botón indica "Descargar PDFs (ES + EN)"
+
+### Sistema de Traducciones
+- **Interfaz Completa**: Todos los elementos UI traducidos
+- **Secciones del CV**: Títulos adaptados según el idioma
+- **Botones y Mensajes**: Experiencia completamente localizada
+- **Escalabilidad**: Sistema preparado para más idiomas
+
 ## 🤖 Integración con IA
 
 ### Modelo Utilizado
-- **Google Gemini 2.5 Flash Lite Preview**: Modelo optimizado y eficiente
+- **Google Gemini 2.5 Flash Lite Preview**: Modelo optimizado para generación bilingüe
 - **OpenRouter API**: Proxy que facilita el acceso a múltiples modelos
 - **Configuración**: Modelo configurable para escalabilidad futura
-- **Optimización de Requests**: Sistema inteligente que evita llamadas innecesarias
+- **Optimización de Requests**: Una sola llamada genera ambas versiones
+- **Procesamiento Simultáneo**: Español e inglés en una sola respuesta
 
 ### Prompt Engineering
 El sistema utiliza un prompt altamente optimizado que incluye:
 
 #### Instrucciones Principales
-- Actuar como experto de élite en RRHH y ATS
-- Generar CVs de calidad excepcional
-- Enfoque en logros cuantificables
-- Uso de verbos de acción potentes
+- Actuar como experto de élite en RRHH y ATS bilingüe
+- Generar CVs simultáneos en español e inglés
+- Enfoque en logros cuantificables y verbos de acción
+- Adaptación cultural, no traducción literal
+- Optimización para sistemas ATS en ambos idiomas
 - Eliminación de pronombres personales
+- Consistencia en estructura y formato
 
 #### Estructura de Datos
 ```typescript
@@ -128,23 +166,25 @@ interface CVData {
 - **Skills Blandos**: Liderazgo, comunicación, trabajo en equipo
 - **Inferencia de Datos**: Completa información faltante de forma inteligente
 
-### Proceso de Generación
-1. **Input**: Usuario describe su experiencia en lenguaje natural
+### Proceso de Generación Bilingüe
+1. **Input**: Usuario describe su experiencia en lenguaje natural (cualquier idioma)
 2. **Verificación**: Sistema verifica si hay datos guardados para esa descripción
-3. **Procesamiento**: IA analiza y estructura la información (solo si es necesario)
-4. **Persistencia**: Datos se guardan automáticamente en localStorage
-5. **Validación**: Sistema valida la estructura JSON
-6. **Renderizado**: Generación de vista previa en tiempo real
-7. **PDF**: Conversión a PDF optimizado para una página
+3. **Procesamiento IA**: Genera simultáneamente versiones en español e inglés
+4. **Persistencia Dual**: Ambas versiones se guardan automáticamente en localStorage
+5. **Validación**: Sistema valida la estructura JSON bilingüe
+6. **Renderizado Dinámico**: Vista previa con switch de idiomas instantáneo
+7. **Exportación Dual**: Conversión a 2 PDFs optimizados (ES + EN)
 
 ## 💾 Sistema de Persistencia Inteligente
 
 ### Características de Persistencia
 - **localStorage Seguro**: Almacenamiento local con manejo de errores
+- **Datos Bilingües**: Persistencia simultánea de versiones ES e EN
 - **Sesiones Temporales**: Datos válidos por 24 horas
 - **Comparación Inteligente**: Evita requests duplicados para la misma descripción
 - **Recuperación Automática**: Carga datos existentes al recargar la página
-- **Limpieza Automática**: Elimina datos expirados automáticamente
+- **Switch Instantáneo**: Cambio de idioma sin regenerar datos
+- **Limpieza Automática**: Elimina datos expirados y tras descarga
 
 ### Optimización de Requests
 #### Cuándo SE HACE request a IA:

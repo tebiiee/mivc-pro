@@ -212,11 +212,16 @@ export function HarvardPDF({ data }: HarvardPDFProps) {
                   </View>
                 </View>
                 
-                {(job.responsibilities || job.achievements) && (
+                {job.description && (
+                  <Text style={[styles.responsibility, { marginTop: 4, marginLeft: 0 }]}>
+                    {job.description}
+                  </Text>
+                )}
+                {job.achievements && job.achievements.length > 0 && (
                   <View style={styles.responsibilities}>
-                    {(job.responsibilities || job.achievements || []).map((item, idx) => (
+                    {job.achievements.map((achievement, idx) => (
                       <Text key={idx} style={styles.responsibility}>
-                        • {item}
+                        • {achievement}
                       </Text>
                     ))}
                   </View>

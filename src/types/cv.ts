@@ -69,8 +69,57 @@ export interface CVData {
   projects: Project[];
 }
 
+// Estructura simplificada para la respuesta de la IA
+export interface AIGeneratedCV {
+  personalInfo: {
+    fullName: string;
+    email: string;
+    phone: string;
+    location: string;
+  };
+  summary: string;
+  experience: {
+    company: string;
+    position: string;
+    startDate: string;
+    endDate: string;
+    achievements: string[];
+  }[];
+  education: {
+    institution: string;
+    degree: string;
+    startDate: string;
+    endDate: string;
+  }[];
+  skills: {
+    technical: string[];
+    soft: string[];
+  };
+  languages: {
+    language: string;
+    level: string;
+  }[];
+  certifications: string[];
+}
+
+// Estructura bilingüe para la respuesta de la IA
+export interface BilingualCVResponse {
+  spanish: AIGeneratedCV;
+  english: AIGeneratedCV;
+}
+
 export interface AIProcessingResponse {
   success: boolean;
   data?: CVData;
+  bilingualData?: BilingualCVResponse;
   error?: string;
+}
+
+// Tipo para el idioma actual
+export type LanguageCode = 'spanish' | 'english';
+
+// Contexto bilingüe
+export interface BilingualContext {
+  currentLanguage: LanguageCode;
+  data: BilingualCVResponse | null;
 }

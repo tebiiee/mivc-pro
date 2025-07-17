@@ -1,20 +1,41 @@
-import { CVData } from '@/types/cv'
+import { CVData, LanguageCode } from '@/types/cv'
 import { CVTemplate } from '@/types/templates'
 import { Button } from '@/components/ui/button'
 import { Download, Mail, Phone, MapPin, Globe, Linkedin, Palette, Home } from 'lucide-react'
 import { HarvardTemplate } from '@/components/templates/HarvardTemplate'
+import { ProfessionalTemplate } from '@/components/templates/ProfessionalTemplate'
+import { LanguageToggle } from '@/components/LanguageToggle'
+import { getTranslations } from '@/lib/translations'
 
 interface CVPreviewProps {
   data: CVData
   template: CVTemplate
+  language?: LanguageCode
   onDownload: () => void
   onEdit: () => void
   onChangeTemplate: () => void
   onHome: () => void
+  showLanguageToggle?: boolean
+  currentLanguage?: LanguageCode
+  onLanguageChange?: (language: LanguageCode) => void
+  isBilingual?: boolean
 }
 
-export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate, onHome }: CVPreviewProps) {
+export function CVPreview({
+  data,
+  template,
+  language = 'spanish',
+  onDownload,
+  onEdit,
+  onChangeTemplate,
+  onHome,
+  showLanguageToggle = false,
+  currentLanguage = 'spanish',
+  onLanguageChange,
+  isBilingual = false
+}: CVPreviewProps) {
   const { personalInfo, experience, education, skills, languages, projects } = data
+  const t = getTranslations(language)
 
   // Ordenar experiencia y educación por fecha (más reciente primero)
   const sortedExperience = [...experience].sort((a, b) => {
@@ -30,41 +51,81 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
   })
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 px-4">
-      {/* Header con botones de acción */}
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Vista previa de tu CV</h2>
-        <div className="flex flex-wrap gap-2 sm:gap-3 justify-center sm:justify-end">
-          <Button variant="outline" onClick={onHome} className="gap-2 text-xs sm:text-sm">
-            <Home className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="hidden sm:inline">Volver al inicio</span>
-            <span className="sm:hidden">Inicio</span>
-          </Button>
-          <Button variant="outline" onClick={onChangeTemplate} className="gap-2 text-xs sm:text-sm">
-            <Palette className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="hidden sm:inline">Cambiar plantilla</span>
-            <span className="sm:hidden">Plantilla</span>
-          </Button>
-          <Button variant="outline" onClick={onEdit} className="text-xs sm:text-sm">
-            <span className="hidden sm:inline">Editar información</span>
-            <span className="sm:hidden">Editar</span>
-          </Button>
-          <Button onClick={onDownload} className="gap-2 text-xs sm:text-sm">
-            <Download className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="hidden sm:inline">Descargar PDF</span>
-            <span className="sm:hidden">PDF</span>
-          </Button>
+    <div className="w-full max-w-7xl mx-auto space-y-8 px-4">
+      {/* Header elegante con título */}
+      <div className="text-center">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Vista previa de tu CV</h2>
+        <p className="text-gray-600 text-sm sm:text-base">Tu currículum está listo. Revisa, personaliza y descarga.</p>
+      </div>
+
+      {/* Panel de control organizado */}
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-6">
+        <div className="flex flex-col gap-6">
+
+          {/* Language Toggle - Solo mostrar si hay datos bilingües */}
+          {showLanguageToggle && onLanguageChange && (
+            <div className="flex justify-center">
+              <LanguageToggle
+                currentLanguage={currentLanguage}
+                onLanguageChange={onLanguageChange}
+              />
+            </div>
+          )}
+
+          <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
+            {/* Grupo de navegación */}
+            <div className="flex flex-col sm:flex-row gap-3 order-2 lg:order-1">
+              <Button
+                variant="outline"
+                onClick={onHome}
+                className="gap-2 text-sm hover:bg-gray-50 border-gray-300"
+              >
+                <Home className="h-4 w-4" />
+                {t.buttons.backToHome}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={onEdit}
+                className="gap-2 text-sm hover:bg-gray-50 border-gray-300"
+              >
+                {t.buttons.editInfo}
+              </Button>
+            </div>
+
+            {/* Grupo de personalización */}
+            <div className="flex flex-col sm:flex-row gap-3 order-1 lg:order-2">
+              <Button
+                variant="outline"
+                onClick={onChangeTemplate}
+                className="gap-2 text-sm hover:bg-blue-50 border-blue-300 text-blue-700"
+              >
+                <Palette className="h-4 w-4" />
+                {t.buttons.changeTemplate}
+              </Button>
+              <Button
+                onClick={onDownload}
+                className="gap-2 text-sm bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg"
+              >
+                <Download className="h-4 w-4" />
+                {isBilingual ? t.buttons.downloadBilingualPDF : t.buttons.downloadPDF}
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* CV Preview - Optimizado para móviles */}
       <div className="flex justify-center">
         {template.layout === 'harvard' ? (
-          <div className="w-full max-w-[210mm] min-h-[297mm]">
-            <HarvardTemplate data={data} template={template} />
+          <div className="w-full max-w-[280mm] min-h-[396mm] scale-75 sm:scale-85 lg:scale-100 shadow-lg">
+            <HarvardTemplate data={data} template={template} language={language} />
+          </div>
+        ) : template.layout === 'professional' ? (
+          <div className="w-full max-w-[280mm] min-h-[396mm] scale-75 sm:scale-85 lg:scale-100 shadow-lg">
+            <ProfessionalTemplate data={data} template={template} language={language} />
           </div>
         ) : (
-          <div className="w-full max-w-[210mm] min-h-[297mm] bg-white shadow-lg rounded-lg overflow-hidden" id="cv-content">
+          <div className="w-full max-w-[280mm] min-h-[396mm] scale-75 sm:scale-85 lg:scale-100 bg-white shadow-lg rounded-lg overflow-hidden" id="cv-content">
           {/* Header del CV */}
           <div
             className="text-white p-4 sm:p-6 md:p-8"
@@ -72,8 +133,7 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
               background: `linear-gradient(135deg, ${template.colors.primary} 0%, ${template.colors.secondary} 100%)`
             }}
           >
-            <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-white">{personalInfo.fullName}</h1>
-            <p className="text-white/95 text-base sm:text-lg mb-4">{personalInfo.summary}</p>
+            <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-white">{personalInfo.fullName}</h1>
 
           <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-white/95">
             {personalInfo.email && (
@@ -110,6 +170,23 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
         </div>
 
           <div className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 md:space-y-8">
+            {/* Perfil Profesional */}
+            {data.summary && (
+              <section>
+                <h2
+                  className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 pb-2 text-gray-900"
+                  style={{
+                    borderBottom: `2px solid ${template.colors.primary}`
+                  }}
+                >
+                  {t.sections.professionalProfile}
+                </h2>
+                <p className="text-gray-700 text-sm sm:text-base leading-relaxed text-justify">
+                  {data.summary}
+                </p>
+              </section>
+            )}
+
             {/* Experiencia */}
             {sortedExperience.length > 0 && (
               <section>
@@ -119,7 +196,7 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
                     borderBottom: `2px solid ${template.colors.primary}`
                   }}
                 >
-                  Experiencia Profesional
+                  {t.sections.experience}
                 </h2>
                 <div className="space-y-4">
                   {sortedExperience.map((exp) => (
@@ -161,7 +238,7 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
                     borderBottom: `2px solid ${template.colors.primary}`
                   }}
                 >
-                  Educación
+                  {t.sections.education}
                 </h2>
                 <div className="space-y-4">
                   {sortedEducation.map((edu) => (
@@ -203,7 +280,7 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
                     borderBottom: `2px solid ${template.colors.primary}`
                   }}
                 >
-                  Habilidades
+                  {t.sections.skills}
                 </h2>
                 <div className="space-y-3">
                   {Object.entries(
@@ -244,7 +321,7 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
                     borderBottom: `2px solid ${template.colors.primary}`
                   }}
                 >
-                  Idiomas
+                  {t.sections.languages}
                 </h2>
                 <div className="space-y-2">
                   {languages.map((lang) => (
@@ -267,7 +344,7 @@ export function CVPreview({ data, template, onDownload, onEdit, onChangeTemplate
                   borderBottom: `2px solid ${template.colors.primary}`
                 }}
               >
-                Proyectos
+                {t.sections.projects}
               </h2>
               <div className="space-y-4">
                 {projects.map((project) => (

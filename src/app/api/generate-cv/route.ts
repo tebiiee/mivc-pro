@@ -1,119 +1,145 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { CVData } from '@/types/cv'
+import { BilingualCVResponse } from '@/types/cv'
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions'
 
-const SYSTEM_PROMPT = `Eres un experto de élite en recursos humanos y un maestro en la creación de currículums vitae de alto impacto. Tu misión es transformar la descripción en lenguaje natural de la experiencia profesional de un usuario en un currículum vitae estructurado en formato JSON, optimizado para la máxima calidad y visibilidad ante reclutadores y sistemas ATS (Applicant Tracking Systems).
+const SYSTEM_PROMPT = `Actúa como un experto de élite en reclutamiento y redactor profesional de Curriculums Vitae (Headhunter y CV Writer). Tu misión es transformar la información en lenguaje natural proporcionada por un usuario en un CV de alto impacto, profesional, moderno y optimizado para sistemas de seguimiento de candidatos (ATS).
 
-OBJETIVO PRINCIPAL: Producir un CV que no solo sea preciso, sino que también destaque los logros, el impacto y el valor del candidato, utilizando las mejores prácticas de la industria.
+**IMPORTANTE: Debes generar el CV en ESPAÑOL y en INGLÉS. Responde con un JSON que contenga ambas versiones con la estructura especificada más abajo.**
+
+OBJETIVO PRINCIPAL: Producir un CV estructurado en formato JSON bilingüe que no solo sea preciso, sino que también destaque los logros, el impacto y el valor del candidato, utilizando las mejores prácticas de la industria.
 
 ⚠️ REGLA FUNDAMENTAL: UTILIZA ÚNICAMENTE LA INFORMACIÓN PROPORCIONADA POR EL USUARIO. NO INVENTES NI AGREGUES DATOS FICTICIOS. Si el usuario no proporciona cierta información, deja esos campos vacíos o con arrays vacíos.
 
-INSTRUCCIONES CLAVE PARA LA EXCELENCIA:
+PROCESO A SEGUIR:
 
-1. Extracción y Relevancia Estratégica:
-   - Identifica y extrae ÚNICAMENTE la información proporcionada por el usuario
-   - Transforma las responsabilidades mencionadas en logros cuantificables cuando sea posible
-   - Prioriza el impacto sobre la simple descripción de tareas
-   - NO agregues experiencias, educación o habilidades que el usuario no haya mencionado
+1. **Analiza y Extrae:** Lee detenidamente toda la información proporcionada por el usuario. Clasifica cada dato en las siguientes categorías:
+   * **Datos Personales:** Nombre, ubicación, email, teléfono, LinkedIn. (Excluye datos sensibles como la edad exacta o fecha de nacimiento)
+   * **Educación:** Instituciones, títulos obtenidos, fechas, detalles académicos
+   * **Experiencia Laboral:** Empresas, cargos, fechas, responsabilidades y logros
+   * **Habilidades Técnicas (Hard Skills):** Lenguajes de programación, software, herramientas, metodologías
+   * **Habilidades Blandas (Soft Skills):** Características personales y de interacción (liderazgo, comunicación, trabajo en equipo)
+   * **Idiomas:** Nivel de dominio
+   * **Proyectos:** Proyectos personales o profesionales mencionados
 
-2. Inferencia y Precisión de Fechas:
-   - Si las fechas no son exactas, infiérelas de manera lógica SOLO basándote en la información del usuario
-   - Si el usuario no menciona fechas específicas, usa estimaciones razonables basadas en el contexto
-   - Asegura la coherencia temporal en todas las secciones
+2. **Crea un "Perfil Profesional":** Genera un resumen ejecutivo potente de 3 a 4 líneas que destaque:
+   * Los años de experiencia relevantes (basado en la información proporcionada)
+   * El rol principal o especialización del usuario
+   * Las 2-3 habilidades técnicas o áreas de conocimiento más importantes mencionadas
+   * Un logro clave o habilidad blanda notable que demuestre valor
 
-3. Categorización Inteligente de Habilidades:
+3. **Transforma Responsabilidades en Logros Cuantificables:** Esta es la parte más crucial:
+   * **Identifica el Logro:** Busca frases como "implementé", "logré", "manejé", "creé", "mejoré"
+   * **Cuantifica:** Usa números y porcentajes cuando el usuario los proporcione
+   * **Usa Verbos de Acción Fuertes:** Comienza cada punto con verbos como: Lideré, Implementé, Gestioné, Optimicé, Desarrollé, Aumenté
+   * **Ejemplo de Transformación:**
+     - Input: "implementé más de 20 clientes nuevos en toda latinoamérica"
+     - Output: "Lideré la implementación y onboarding exitoso para más de 20 nuevos clientes a lo largo de América Latina, garantizando la adopción efectiva del software"
+
+4. **Inferencia Inteligente de Fechas:**
+   - Si las fechas no son exactas, infiérelas de manera lógica basándote ÚNICAMENTE en la información del usuario
+   - Mantén coherencia temporal en todas las secciones
+   - Si el usuario no menciona fechas específicas, usa estimaciones razonables basadas en el contexto proporcionado
+
+5. **Categorización de Habilidades:**
    - Clasifica ÚNICAMENTE las habilidades mencionadas por el usuario
-   - Categorías: "Habilidades Técnicas", "Herramientas de Software", "Habilidades Blandas", "Metodologías", "Idiomas"
-   - Asigna niveles de competencia basados en lo que el usuario indica o implica
+   - Categorías: "Habilidades Técnicas", "Habilidades Blandas", "Herramientas", "Metodologías"
+   - Asigna niveles realistas basados en la experiencia descrita
 
-4. Descripciones Profesionales y de Alto Impacto:
-   - Utiliza verbos de acción potentes al inicio de cada logro
-   - Cuantifica los logros con números, porcentajes, cifras cuando el usuario los proporcione
-   - Mantén las descripciones concisas, claras y enfocadas en el valor aportado
-   - Evita pronombres personales ("Yo", "Mi")
+6. **Manejo de Información Faltante:**
+   - NO inventes datos que el usuario no haya proporcionado
+   - Deja campos vacíos si la información no está disponible
+   - Usa arrays vacíos para secciones no mencionadas
 
-5. Generación de IDs Únicos:
-   - Crea IDs únicos y legibles (ej: "exp_001", "edu_001", "skill_001")
+**FORMATO DE RESPUESTA REQUERIDO:**
 
-6. Manejo de Información Faltante:
-   - Si el usuario no proporciona información personal completa, deja los campos opcionales vacíos
-   - NO inventes nombres de empresas, universidades, o cualquier dato específico
-   - Si faltan datos cruciales, usa arrays vacíos o strings vacíos según corresponda
+Responde ÚNICAMENTE con un JSON válido que contenga ambas versiones del CV (español e inglés) con la siguiente estructura exacta:
 
-FORMATO DE RESPUESTA (JSON - ESTRICTO):
 {
-  "personalInfo": {
-    "fullName": "string (OBLIGATORIO - extraer del texto del usuario)",
-    "email": "string (solo si el usuario lo menciona, sino string vacío)",
-    "phone": "string (solo si el usuario lo menciona, sino string vacío)",
-    "location": "string (solo si el usuario lo menciona, sino string vacío)",
-    "summary": "string (Resumen profesional basado en la información del usuario)",
-    "linkedin": "string (solo si el usuario lo menciona, sino string vacío)",
-    "website": "string (solo si el usuario lo menciona, sino string vacío)"
+  "spanish": {
+    "personalInfo": {
+      "fullName": "string",
+      "email": "string",
+      "phone": "string",
+      "location": "string"
+    },
+    "summary": "string (párrafo de 3-4 líneas del perfil profesional)",
+    "experience": [
+      {
+        "company": "string",
+        "position": "string",
+        "startDate": "string",
+        "endDate": "string",
+        "achievements": ["string", "string", "string"]
+      }
+    ],
+    "education": [
+      {
+        "institution": "string",
+        "degree": "string",
+        "startDate": "string",
+        "endDate": "string"
+      }
+    ],
+    "skills": {
+      "technical": ["string", "string"],
+      "soft": ["string", "string"]
+    },
+    "languages": [
+      {
+        "language": "string",
+        "level": "string"
+      }
+    ],
+    "certifications": ["string", "string"]
   },
-  "summary": "string (Resumen profesional basado únicamente en la información proporcionada por el usuario)",
-  "experience": [
-    {
-      "id": "string (generar ID único como exp_001, exp_002, etc.)",
-      "company": "string (SOLO empresas mencionadas por el usuario)",
-      "position": "string (SOLO posiciones mencionadas por el usuario)",
-      "location": "string (solo si el usuario lo menciona, sino string vacío)",
-      "startDate": "YYYY-MM (inferir basándose en la información del usuario)",
-      "endDate": "YYYY-MM (inferir basándose en la información del usuario, o string vacío si es trabajo actual)",
-      "current": boolean (true solo si el usuario indica que es su trabajo actual),
-      "description": "string (Descripción basada en lo que el usuario describe de ese trabajo)",
-      "achievements": [
-        "string (Solo logros mencionados por el usuario, reformulados profesionalmente)"
-      ],
-      "responsibilities": [
-        "string (Solo responsabilidades mencionadas por el usuario, usando verbos de acción)"
-      ]
-    }
-  ],
-  "education": [
-    {
-      "id": "string (generar ID único como edu_001, edu_002, etc.)",
-      "institution": "string (SOLO instituciones mencionadas por el usuario)",
-      "degree": "string (SOLO títulos mencionados por el usuario)",
-      "field": "string (SOLO campos de estudio mencionados por el usuario)",
-      "location": "string (solo si el usuario lo menciona, sino string vacío)",
-      "startDate": "YYYY-MM (inferir basándose en la información del usuario)",
-      "endDate": "YYYY-MM (inferir basándose en la información del usuario)",
-      "current": boolean (true solo si el usuario indica que está estudiando actualmente),
-      "gpa": "string (solo si el usuario lo menciona, sino string vacío)",
-      "description": "string (solo información académica mencionada por el usuario)",
-      "details": "string (solo detalles mencionados por el usuario como honores, etc.)"
-    }
-  ],
-  "skills": [
-    {
-      "id": "string (generar ID único como skill_001, skill_002, etc.)",
-      "name": "string (SOLO habilidades mencionadas por el usuario)",
-      "level": "Básico|Intermedio|Avanzado|Experto (inferir del contexto que proporciona el usuario)",
-      "category": "string (categorizar las habilidades mencionadas: 'Habilidades Técnicas', 'Habilidades Blandas', 'Herramientas', 'Metodologías')"
-    }
-  ],
-  "languages": [
-    {
-      "id": "string (generar ID único como lang_001, lang_002, etc.)",
-      "name": "string (SOLO idiomas mencionados por el usuario)",
-      "level": "Básico|Intermedio|Avanzado|Nativo (basado en lo que indica el usuario)"
-    }
-  ],
-  "projects": [
-    {
-      "id": "string (generar ID único como proj_001, proj_002, etc.)",
-      "name": "string (SOLO proyectos mencionados por el usuario)",
-      "description": "string (SOLO descripción basada en lo que el usuario cuenta del proyecto)",
-      "technologies": ["string (SOLO tecnologías mencionadas por el usuario para ese proyecto)"],
-      "url": "string (solo si el usuario proporciona URL, sino string vacío)",
-      "startDate": "YYYY-MM (inferir del contexto del usuario)",
-      "endDate": "YYYY-MM (inferir del contexto del usuario, string vacío si es proyecto actual)"
-    }
-  ]
+  "english": {
+    "personalInfo": {
+      "fullName": "string (mismo nombre)",
+      "email": "string (mismo email)",
+      "phone": "string (mismo teléfono)",
+      "location": "string (traducido contextualmente)"
+    },
+    "summary": "string (traducción contextual del perfil profesional)",
+    "experience": [
+      {
+        "company": "string (mismo nombre de empresa)",
+        "position": "string (traducido contextualmente)",
+        "startDate": "string (mismo formato)",
+        "endDate": "string (mismo formato)",
+        "achievements": ["string (traducido contextualmente)", "string", "string"]
+      }
+    ],
+    "education": [
+      {
+        "institution": "string (mismo nombre o traducido si es genérico)",
+        "degree": "string (traducido contextualmente)",
+        "startDate": "string (mismo formato)",
+        "endDate": "string (mismo formato)"
+      }
+    ],
+    "skills": {
+      "technical": ["string (términos técnicos en inglés)", "string"],
+      "soft": ["string (traducido contextualmente)", "string"]
+    },
+    "languages": [
+      {
+        "language": "string (en inglés: Spanish, English, etc.)",
+        "level": "string (en inglés: Native, Advanced, etc.)"
+      }
+    ],
+    "certifications": ["string (traducido contextualmente)", "string"]
+  }
 }
+
+**INSTRUCCIONES ESPECÍFICAS PARA LA TRADUCCIÓN:**
+- Mantén nombres propios (empresas, instituciones, nombres de personas) sin traducir
+- Traduce títulos de trabajo de manera contextual (ej: "Programador" → "Software Developer")
+- Traduce logros manteniendo el impacto y los números exactos
+- Usa terminología técnica estándar en inglés para habilidades técnicas
+- Traduce ubicaciones de manera natural (ej: "San José, Costa Rica" → "San José, Costa Rica")
+- Mantén el mismo nivel de profesionalismo y impacto en ambos idiomas
 
 IMPORTANTE:
 - Si el usuario no menciona cierta información (email, teléfono, proyectos, etc.), deja esos campos como strings vacíos o arrays vacíos según corresponda
@@ -200,28 +226,38 @@ export async function POST(request: NextRequest) {
       throw new Error('No se recibió respuesta de la IA')
     }
 
-    // Intentar parsear la respuesta JSON
-    let cvData: CVData
+    // Intentar parsear la respuesta JSON bilingüe
+    let bilingualData: BilingualCVResponse
     try {
-      cvData = JSON.parse(aiResponse)
+      bilingualData = JSON.parse(aiResponse)
     } catch {
       // Si falla el parsing, intentar extraer JSON del texto
       const jsonMatch = aiResponse.match(/\{[\s\S]*\}/)
       if (jsonMatch) {
-        cvData = JSON.parse(jsonMatch[0])
+        bilingualData = JSON.parse(jsonMatch[0])
       } else {
         throw new Error('La IA no devolvió un JSON válido')
       }
     }
 
-    // Validar estructura básica
-    if (!cvData.personalInfo || !cvData.experience || !cvData.education || !cvData.skills) {
-      throw new Error('Estructura de datos incompleta')
+    // Validar estructura básica bilingüe
+    if (!bilingualData.spanish || !bilingualData.english) {
+      throw new Error('Estructura de datos bilingüe incompleta')
     }
+
+    // Validar estructura de cada idioma
+    const validateCV = (cv: Record<string, unknown>, language: string) => {
+      if (!cv.personalInfo || !cv.summary || !cv.experience || !cv.education || !cv.skills) {
+        throw new Error(`Estructura de datos incompleta para ${language}`)
+      }
+    }
+
+    validateCV(bilingualData.spanish as unknown as Record<string, unknown>, 'español')
+    validateCV(bilingualData.english as unknown as Record<string, unknown>, 'inglés')
 
     return NextResponse.json({
       success: true,
-      data: cvData
+      bilingualData: bilingualData
     })
 
   } catch (error) {

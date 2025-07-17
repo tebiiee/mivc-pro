@@ -4,6 +4,7 @@ import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import { CVData } from '@/types/cv'
 import { CVTemplate } from '@/types/templates'
 import { HarvardPDF } from '@/components/templates/HarvardPDF'
+import { ProfessionalPDF } from '@/components/templates/ProfessionalPDF'
 
 interface CVPDFProps {
   data: CVData
@@ -20,6 +21,11 @@ export function CVPDF({ data, template }: CVPDFProps) {
   // Si es plantilla Harvard, usar el componente específico
   if (template.layout === 'harvard') {
     return <HarvardPDF data={data} template={template} />
+  }
+
+  // Si es plantilla Professional, usar el componente específico
+  if (template.layout === 'professional') {
+    return <ProfessionalPDF data={data} template={template} />
   }
 
   const { personalInfo, experience, education, skills, languages, projects } = data
