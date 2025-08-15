@@ -1,9 +1,19 @@
-# micv.pro - Generador de CV Profesional con IA
+# 🚀 micv.pro - AI-Powered Professional CV Generator
+
+<div align="center">
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/tebiiee/mivc-pro)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![GitHub Stars](https://img.shields.io/github/stars/tebiiee/mivc-pro?style=social)](https://github.com/tebiiee/mivc-pro/stargazers)
+
+**🌟 Create professional CVs in Spanish and English simultaneously using advanced AI**
+
+[Live Demo](https://micv.pro) • [Documentation](docs/project.md) • [Contributing](CONTRIBUTING.md) • [Report Bug](https://github.com/tebiiee/mivc-pro/issues)
+
+</div>
 
 Una aplicación web moderna **bilingüe** que utiliza inteligencia artificial avanzada para crear currículums vitae (CV) profesionales simultáneamente en **español e inglés** a partir de descripciones en lenguaje natural.
 
@@ -218,13 +228,49 @@ La aplicación es compatible con cualquier proveedor que soporte Next.js:
 - Render
 - AWS Amplify
 
-## 🤝 Contribuir
+## 🤝 Contributing
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+We welcome contributions from the community! Here's how you can help:
+
+### 🚀 Quick Start for Contributors
+
+1. **Fork** the repository
+2. **Clone** your fork: `git clone https://github.com/your-username/mivc-pro.git`
+3. **Install** dependencies: `npm install`
+4. **Create** a feature branch: `git checkout -b feature/amazing-feature`
+5. **Make** your changes and test thoroughly
+6. **Commit** with conventional commits: `git commit -m 'feat: add amazing feature'`
+7. **Push** to your branch: `git push origin feature/amazing-feature`
+8. **Open** a Pull Request
+
+### 🎯 Areas Where We Need Help
+
+- 🎨 **New CV Templates**: Design modern, ATS-optimized templates
+- 🌍 **Internationalization**: Add support for more languages
+- 🤖 **AI Improvements**: Enhance prompt engineering and model integration
+- 📱 **Mobile UX**: Improve mobile experience and accessibility
+- 🧪 **Testing**: Add unit tests and integration tests
+- 📚 **Documentation**: Improve docs and add tutorials
+
+### 📋 Contribution Guidelines
+
+Please read our [Contributing Guide](CONTRIBUTING.md) for detailed information about:
+- Code style and conventions
+- Development setup
+- Testing requirements
+- Pull request process
+
+### 🐛 Found a Bug?
+
+1. Check [existing issues](https://github.com/tebiiee/mivc-pro/issues)
+2. Create a [bug report](https://github.com/tebiiee/mivc-pro/issues/new?template=bug_report.md)
+3. Provide detailed reproduction steps
+
+### 💡 Have an Idea?
+
+1. Check [existing feature requests](https://github.com/tebiiee/mivc-pro/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement)
+2. Create a [feature request](https://github.com/tebiiee/mivc-pro/issues/new?template=feature_request.md)
+3. Discuss the idea with the community
 
 ## 📄 Licencia
 
@@ -238,9 +284,57 @@ Si tienes problemas o preguntas:
 2. Crea un nuevo Issue si no encuentras solución
 3. Proporciona detalles sobre tu problema y pasos para reproducirlo
 
-## 🙏 Agradecimientos
+## 🌟 Community & Support
 
-- [OpenRouter](https://openrouter.ai/) por la API de IA
-- [Tailwind CSS](https://tailwindcss.com/) por el sistema de diseño
-- [Lucide](https://lucide.dev/) por los iconos
-- [React PDF](https://react-pdf.org/) por la generación de PDFs
+### 💬 Join the Community
+
+- **GitHub Discussions**: Ask questions and share ideas
+- **Issues**: Report bugs and request features
+- **Pull Requests**: Contribute code and improvements
+
+### 📊 Project Stats
+
+- **🌟 Stars**: Help us grow by starring the repository
+- **🍴 Forks**: Fork and create your own version
+- **🐛 Issues**: Track bugs and feature requests
+- **🔄 PRs**: Active development and community contributions
+
+## 🙏 Acknowledgments
+
+Special thanks to:
+
+- **[OpenRouter](https://openrouter.ai/)** - AI API infrastructure
+- **[Google](https://ai.google.dev/)** - Gemini AI model
+- **[Vercel](https://vercel.com/)** - Hosting and deployment
+- **[Tailwind CSS](https://tailwindcss.com/)** - Styling framework
+- **[Lucide](https://lucide.dev/)** - Beautiful icons
+- **[React PDF](https://react-pdf.org/)** - PDF generation
+- **All contributors** who help make this project better
+
+## 📈 Roadmap
+
+### 🎯 Upcoming Features
+
+- [ ] **More Languages**: French, German, Portuguese support
+- [ ] **Advanced Templates**: Industry-specific CV designs
+- [ ] **AI Enhancements**: Better content optimization
+- [ ] **Export Options**: Word, LinkedIn, JSON formats
+- [ ] **Collaboration**: Share and review CVs with others
+- [ ] **Analytics**: Track CV performance and views
+
+### 🔮 Future Vision
+
+- **Multi-language Support**: Global accessibility
+- **Template Marketplace**: Community-created designs
+- **AI Coaching**: Interview preparation and career advice
+- **Integration APIs**: Connect with job boards and ATS systems
+
+---
+
+<div align="center">
+
+**Made with ❤️ by the open source community**
+
+[⭐ Star this project](https://github.com/tebiiee/mivc-pro/stargazers) • [🐛 Report Issues](https://github.com/tebiiee/mivc-pro/issues) • [💡 Request Features](https://github.com/tebiiee/mivc-pro/issues/new?template=feature_request.md)
+
+</div>
